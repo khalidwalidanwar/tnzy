@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="shortcut icon" href="./sources/icon.png" type="image/x-icon">
+    <title>TNZY</title>
+</head>
+<body>
+    <header dir="rtl">
+        <div class="info">
+          <button class="userProfile"><i class="fa-solid fa-user"></i></button>
+          <button class="cart"><i class="fa-solid fa-cart-shopping"></i></button>
+        </div>
+        <div class="links">
+            <div class="menuBar"><i class="fa-solid fa-bars"></i></div>
+            <div class="menu">
+                <div class="controle"><i class="fa-solid fa-x"></i></div>
+                <ul dir="ltr">
+                    <li class="madeYourT"><a href="./components/designs/">Design a T-shirt</a></li>
+                    <li><a href="./components/catalog/">Catalog</a></li>
+                    <li><a href="#analyse">Reviews</a></li>
+                    <li><a href="#footer">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="logo"><a href="./">
+            <!-- <h1>Tee<span>N</span>zy</h1> -->
+            <img src="./sources/logo.svg" alt="TeeNzy">
+        </a></div>
+    </header>
+
+    <section class="trend">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active" data-bs-interval="10000">
+                <img src="./sources/5961001349845993154.jpg" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item" data-bs-interval="2000">
+                <img src="./sources/5961001349845993156.jpg" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item mmm">
+                <img src="./sources/5961001349845993155.jpg" class="d-block w-100" alt="...">
+              </div>
+            </div>
+          </div>
+          <div class="overlay">
+            <a href="#ai"><button>Make a T-shirt !</button></a>
+          </div>
+    </section>
+
+    <section class="AI" id="ai">
+            <div class="prompt">
+                <div class="input-group mb-3">
+                  <textarea class="form-control" placeholder="Design Your T-shirt ...."aria-label="Example text with button addon" aria-describedby="button-addon1"></textarea>
+                    <button class="btn btn-success" type="submit" id="button-addon1">Design</button>
+                </div>
+                <p>Design your own T-shirt for free ! Order Now.</p>
+            </div>
+            <div class="overlay">
+              <video autoplay muted loop playsinline class="ai-bg">
+                <source src="./sources/techvid.mp4" type="video/mp4">
+              </video>
+            </div>
+    </section>
+
+    <section class="topCollections collection">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 head">
+                    <div class="mainTitle">
+                        <h1>Best Collection</h1>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a href="#catalog"><a class="btn" href="./components/catalog/" target="_blank">See More..</a></a>
+                </div>
+                <div class="col-md-6">
+                    <div class="product-grid visible">
+                       <!-- Products will be loaded here dynamically -->
+                </div>
+            </div>
+    </section>
+
+    <section class="summerCollections collection">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 head">
+                    <div class="mainTitle">
+                        <h1>Summer Collection</h1>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <a href="#catalog"><a class="btn" href="./components/catalog/" target="_blank">See More...</a></a>
+                </div>
+                <div class="col-md-6">
+                    <div class="product-grid visible">
+                        <!-- Products will be loaded here dynamically -->
+                </div>
+            </div>
+    </section>
+
+
+    <section class="analyse" id="analyse">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 head">
+              <div class="mainTitle visible">
+                <h1>Customer Reviews</h1>
+              </div>
+              <p></p>
+          </div>
+          <div class="col-md-6">
+              <div id="customerCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                      <!-- Here will be customer reviews dynamically added -->
+                    </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#customerCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <i class=" fa-solid fa-chevron-left"></i>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#customerCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <i class=" fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+          </div>
+          <div class="giveStarsOf5">
+            <span>Rate Us</span>
+            <div class="stars">
+              <i class="fa-regular fa-star star filled" data-value="1"></i>
+              <i class="fa-regular fa-star star filled" data-value="2"></i>
+              <i class="fa-regular fa-star star filled" data-value="3"></i>
+              <i class="fa-regular fa-star star filled" data-value="4"></i>
+              <i class="fa-regular fa-star star filled" data-value="5"></i>
+            </div>
+          </div>
+          <div class="col-md-6 reviews">
+            <input type="text" class="form-control" placeholder="Write Your Review....">
+            <button class="btn btn-primary">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer">
+      <div class="container" id="footer">
+        <div class="row first">
+          <div class=" info">
+            <div class="logoContainer">
+              <img src="./sources/logo2.svg" alt="">
+            </div>
+            <div class="aboutUs">
+              <p><span style="font-weight: bold;">TNZY</span> is an online store specializing in custom T-shirts and clothing. We offer you the opportunity to design your own T-shirt using advanced artificial intelligence technologies. Whether you're looking for a simple T-shirt or a unique design that reflects your personality, we're here to make it happen.</p>
+            </div>
+            <div class="social">
+            <a href="https://www.facebook.com/profile.php?id=61578806815180"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.instagram.com/teenzy_store?igsh=NHdsdDdpMzd6eXR1"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@teenzy73?_t=ZS-8zeuAbljmj3&_r=1 "><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://wa.me/+201061193251 "><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+          </div>
+          <div class=" fast-links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="./components/designs/">Design a T-shirt</a></li>
+              <li><a href="./components/catalog/">Catalog</a></li>
+              <li><a href="#analyse">Customer Reviews</a></li>
+              <li><a href="./components/policy/shippingInfo.html">Shipping Service</a></li>
+              <li><a href="./components/policy/refunInfo.html">Exchange and Return Policy</a></li>
+              <li><a href="./components/policy/policy.html">Privacy policy</a></li>
+              </ul>
+            </div>
+          <div class=" contact">
+            <h3>Contact Us</h3>
+            <div class="contact-item">
+              <p>Phone: 01061193251</p>
+              <p>Email: <a style="color: #fff;" href="mailto:teenzy2525@gmail.com">teenzy2525@gmail.com</a> </p>
+            </div>
+            </div>
+        </div>
+        <div dir="rtl" class="row endless">
+          <div class="col-10 text-end">
+            <p dir="ltr">&copy; 2025 All rights reserved for TNZY.</p>
+          </div>
+          <div class="col-2 text-center">
+            <img src="./sources/vfcash.png" alt="Vodafone Cash" width="50px">
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <div class="productPreview d-none">
+      <div class="previewCard">
+        <div class="closeBtn"><i class="fa-solid fa-x"></i></div>
+        <div class="productImagesContainer">
+          <div class="productImage">
+            <img src="" alt="Product Image">
+          </div>
+          <div class="thumbnailContainer">
+            <!-- Thumbnails will be dynamically added here -->
+          </div>
+        </div>
+        <div class="productDetails">
+          <h2 class="productTitle"></h2>
+          <p class="productDescription"></p>
+          <div class="productPrice" data-lastPrice="230.00">Price:   <span></span> ج.م</div>
+          <div class="contc">
+            <div class="quantity"> 
+              <label for="quantity">Quantity:</label>
+              <input type="number" class="qtyInput" name="quantity" value="1" min="1">
+            </div>
+            <div class="productSize">
+              <label for="size">Size:</label>
+              <select id="size" name="size">
+                <!-- Options will be dynamically added here -->
+              </select>
+            </div>
+          </div>
+          <button class="addToCartBtn">Add to cart</button>
+        </div>
+      </div>
+    </div>
+    <div class="mainOverlay"></div>
+    <script type="module" src="./script/home.js"></script>
+</body>
+</html>
