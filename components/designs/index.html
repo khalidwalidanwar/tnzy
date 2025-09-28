@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="module">
+        import { getCookie } from "../../script/main.js";
+        if(!getCookie("userId")) {
+            window.location.href = "../login/";
+        }else if(getCookie("emailToVerify")) {
+            window.location.href = "../login/verify.html";
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../style/designs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="shortcut icon" href="../../sources/icon.png" type="image/x-icon">
+    <title>تصميم التيشيرت</title>
+</head>
+<body>
+    <div class="welcome d-none">
+        <p>Welcome to TNZY customised world.</p>
+    </div>
+
+    <div class="container">
+        <div class="optionsContainer">
+            <div class="material">
+                <h3>المواد</h3>
+                <div class="materials">
+                    <div class="materialOption" id="cotton">
+                        <img src="../../sources/cotton.png" alt="Cotton">
+                        <p>قطن</p>
+                    </div>
+                    <div class="materialOption" id="polyester">
+                        <img src="../../sources/polyester.png" alt="Polyester">
+                        <p>بوليستر</p>
+                    </div>
+                    <!-- <div class="materialOption" id="blend">
+                        <img src="../../sources/blend.png" alt="Blend">
+                        <p>مخلوط</p>
+                    </div> -->
+                </div>
+            </div>
+            <div class="style">
+                <h3>الأنماط</h3>
+                <div class="styles">
+                    <div class="styleOption" id="roundNeck">
+                        <img src="../../sources/round_neck.png" alt="Round Neck">
+                        <p>ياقة دائرية</p>
+                    </div>
+                    <div class="styleOption" id="vNeck">
+                        <img src="../../sources/v_neck.png" alt="V Neck">
+                        <p>ياقة على شكل V</p>
+                    </div>
+                    <div class="styleOption" id="polo">
+                        <img src="../../sources/polo.png" alt="Polo">
+                        <p>بولو</p>
+                    </div>
+                    <!-- <div class="styleOption" id="longSleeve">
+                        <img src="../../sources/long_sleeve.png" alt="Long Sleeve">
+                        <p>كم طويل</p>
+                    </div> -->
+                </div>
+            </div>
+            <div class="size">
+                <h3>المقاسات</h3>
+                <div class="sizes">
+                    <div class="sizeOption" id="S">S</div>
+                    <div class="sizeOption" id="M">M</div>
+                    <div class="sizeOption" id="L">L</div>
+                    <div class="sizeOption" id="XL">XL</div>
+                    <div class="sizeOption" id="XXL">XXL</div>
+                </div>
+            </div>
+            <div class="color">
+                <h3>الألوان</h3>
+                <div class="colors">
+                    <div class="colorOption" id="white" style="background-color: white;"></div>
+                    <div class="colorOption" id="black" style="background-color: black;"></div>
+                    <div class="colorOption" id="red" style="background-color: red;"></div>
+                    <div class="colorOption" id="blue" style="background-color: blue;"></div>
+                    <div class="colorOption" id="green" style="background-color: green;"></div>
+                    <div class="colorOption" id="yellow" style="background-color: yellow;"></div>
+                    <div class="colorOption" id="gray" style="background-color: gray;"></div>
+                    <div class="colorOption" id="pink" style="background-color: pink;"></div>
+                    <div class="colorOption" id="purple" style="background-color: purple;"></div>
+                    <div class="colorOption" id="orange" style="background-color: orange;"></div>
+                </div>
+            </div>
+            <div class="design">
+                <h3>التصميم</h3>
+                <div class="designOptions">
+                    <div class="designOption" id="uploadDesign">
+                        <i class="fa-solid fa-upload"></i>
+                        <p>رفع تصميم</p>
+                    </div>
+                    <div class="designOption" id="addText">
+                        <i class="fa-solid fa-text"></i>
+                        <p>إضافة نص</p>
+                    </div>
+                    <div class="designOption" id="chooseFromGallery">
+                        <i class="fa-solid fa-image"></i>
+                        <p>اختيار من المعرض</p>
+                    </div>
+                </div>
+            </div>
+            <div class="preview">
+                <h3>المعاينة</h3>
+                <div class="tshirtPreview">
+                    <img id="tshirtImage" src="../../sources/round_neck.png" alt="T-Shirt Preview">
+                    <div id="designLayer" class="designLayer"></div>
+                </div>
+                <button id="addToCart" class="btn btn-primary">إضافة إلى السلة</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../../script/designs.js"></script>
+</body>
+</html>
