@@ -1,0 +1,16 @@
+@import './defaults.scss';
+
+body{
+    background-color: #000;
+}
+.welcome{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 0 1rem;
+}
