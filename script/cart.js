@@ -68,32 +68,163 @@ window.addEventListener("load",async()=>{
         Object.values(cart).forEach(async (product)=>{
             const userRef = doc(db, "products", product.productId);
             const userSnap = await getDoc(userRef);
-            const item = userSnap.data();
-            const productTotalPrice = item.newPrice * product.quantity;
-            totalOfProducts += productTotalPrice;
-            const productElement = document.createElement("div");
-            productElement.classList.add("product");
-            productElement.innerHTML=`
-            <div class="details">
-                <div class="product-title">
-                <p>${item.title}</p>
+            var item = userSnap.data();
+            if(!item){
+                // custom products like t-shirts
+                if(product.productId === "custom-tshirt"){
+                    item = product
+                    // calc. price
+                    let price = 0;
+                    item.material == "100% Cotton" ? price += 500 : price += 300;
+                    item.printingImg != "" ? price += 80 : "";
+                    const productTotalPrice = price * item.quantity;
+                    totalOfProducts += productTotalPrice;
+
+                    // load product info
+                    const productElement = document.createElement("div");
+                    productElement.classList.add("product");
+                    productElement.innerHTML=`
+                    <div class="details">
+                        <div class="product-title">
+                        <p>${(item.productId).toUpperCase()}</p>
+                        </div>
+                        <div class="product-details">
+                        <p class="product-size">Style: ${item.style || "Hoodie"}</p>
+                        <p class="product-size">Size: ${item.size || "S"}</p>
+                        <p class="product-price" class="price">Price: <span>${price}</span> ج.م</p>
+                        <p class="product-price" class="price">Color: <span>${item.color}</span></p>
+                        <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${item.quantity}" min="1"> </p>
+                        </div>
+                    </div>
+                    <div class="imgContainer">
+                        <img src="../../sources/customTshirt.png" alt="">
+                    </div>
+                    <div class="totalPrice">
+                        <p>Total : </p>
+                        <span class="totalProductPrice">${productTotalPrice} ج.م</span>
+                    </div>
+                    <div class="deleteItem"><i class="fa-solid fa-close"></i></div>
+                    `;
+                    productsContainer.appendChild(productElement);
+                    productElement.querySelector(".deleteItem").addEventListener("click",()=>{
+                        productsContainer.removeChild(productElement);
+                        totalOfProducts -= productTotalPrice;
+                        document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
+                        document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                        const totalPrice = totalOfProducts + deliveryFees - discount;
+                        document.querySelector(".totalPriceValue").innerHTML = totalPrice;
+                        // remove from cart
+                        delete cart[Object.keys(cart).find(key=>cart[key].productId === product.productId && cart[key].material === product.material && cart[key].size === product.size && cart[key].designText === product.designText && cart[key].printingImgSide === product.printingImgSide && cart[key].color === product.color && cart[key].style === product.style)];
+                        //reindex cart
+                        const reindexedCart = {};
+                        Object.values(cart).forEach((p, index) => {
+                            reindexedCart[index] = p;
+                        });
+                        window.localStorage.cart = JSON.stringify(reindexedCart);
+                        if(Object.values(cart).length === 0){
+                            window.localStorage.removeItem("cart");
+                            window.location.reload();
+                        }
+                    });
+                    productElement.querySelector(".product-quantity input").addEventListener("change",(e)=>{
+                        const newQuantity = parseInt(e.target.value);
+                        if(newQuantity >= 1){
+                            const newTotalPrice = price * newQuantity;
+                            productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} ج.م`;
+                            totalOfProducts = totalOfProducts - (price * product.quantity) + newTotalPrice;
+                            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
+                            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                            const totalPrice = totalOfProducts + deliveryFees - discount;
+                            document.querySelector(".totalPriceValue").innerHTML = totalPrice;
+                            // update cart
+                            Object.values(cart).forEach(p=>{
+                            if(p.productId === product.productId && p.size === product.size && p.material === product.material && p.designText === product.designText && p.printingImgSide === product.printingImgSide && p.color === product.color && p.style === product.style){
+                                p.quantity = newQuantity;
+                            }
+                            })
+                            window.localStorage.cart = JSON.stringify(cart);
+                        }else{
+                            alert("Quantity must be at least 1");
+                            e.target.value = product.quantity;
+                        }
+                    })
+                }else{
+                    return;
+                }
+            }else{
+                const productTotalPrice = item.newPrice * product.quantity;
+                totalOfProducts += productTotalPrice;
+                const productElement = document.createElement("div");
+                productElement.classList.add("product");
+                productElement.innerHTML=`
+                <div class="details">
+                    <div class="product-title">
+                    <p>${item.title}</p>
+                    </div>
+                    <div class="product-details">
+                    <p class="product-size">Size: ${product.size || "S"}</p>
+                    <p class="product-price" class="price">Price: <span>${item.newPrice}</span> ج.م</p>
+                    <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${product.quantity}" min="1"> </p>
+                    </div>
                 </div>
-                <div class="product-details">
-                <p class="product-size">Size: ${product.size || "S"}</p>
-                <p class="product-price" class="price">Price: <span>${item.newPrice}</span> ج.م</p>
-                <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${product.quantity}" min="1"> </p>
+                <div class="imgContainer">
+                    <img src="../../sources/${item.imgUrl[0]}" alt="">
                 </div>
-            </div>
-            <div class="imgContainer">
-                <img src="../../sources/${item.imgUrl[0]}" alt="">
-            </div>
-            <div class="totalPrice">
-                <p>Total : </p>
-                <span class="totalProductPrice">${productTotalPrice} ج.م</span>
-            </div>
-            <div class="deleteItem"><i class="fa-solid fa-close"></i></div>
-            `;
-            productsContainer.appendChild(productElement);
+                <div class="totalPrice">
+                    <p>Total : </p>
+                    <span class="totalProductPrice">${productTotalPrice} ج.م</span>
+                </div>
+                <div class="deleteItem"><i class="fa-solid fa-close"></i></div>
+                `;
+                productsContainer.appendChild(productElement);
+                productElement.querySelector(".product-quantity input").addEventListener("change",(e)=>{
+                    const newQuantity = parseInt(e.target.value);
+                    if(item.avaliableSizes && newQuantity <= item.avaliableSizes[product.size]){
+                        if(newQuantity >= 1){
+                            const newTotalPrice = item.newPrice * newQuantity;
+                            productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} ج.م`;
+                            totalOfProducts = totalOfProducts - (item.newPrice * product.quantity) + newTotalPrice;
+                            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
+                            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                            const totalPrice = totalOfProducts + deliveryFees - discount;
+                            document.querySelector(".totalPriceValue").innerHTML = totalPrice;
+                            // update cart
+                            Object.values(cart).forEach(p=>{
+                            if(p.productId === product.productId && p.size === product.size){
+                                p.quantity = newQuantity;
+                            }
+                            })
+                            window.localStorage.cart = JSON.stringify(cart);
+                        }else{
+                            alert("Quantity must be at least 1");
+                            e.target.value = product.quantity;
+                        }
+                    }else{
+                        alert(`The requested quantity is not available. The available quantity for size ${product.size} is only ${item.avaliableSizes ? item.avaliableSizes[product.size] : 0} pieces.`);
+                        e.target.value = product.quantity;
+                    }
+                })
+                productElement.querySelector(".deleteItem").addEventListener("click",()=>{
+                    productsContainer.removeChild(productElement);
+                    totalOfProducts -= productTotalPrice;
+                    document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
+                    document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                    const totalPrice = totalOfProducts + deliveryFees - discount;
+                    document.querySelector(".totalPriceValue").innerHTML = totalPrice;
+                    // remove from cart
+                    delete cart[Object.keys(cart).find(key=>cart[key].productId === product.productId && cart[key].size === product.size)];
+                    //reindex cart
+                    const reindexedCart = {};
+                    Object.values(cart).forEach((p, index) => {
+                        reindexedCart[index] = p;
+                    });
+                    window.localStorage.cart = JSON.stringify(reindexedCart);
+                    if(Object.values(cart).length === 0){
+                        window.localStorage.removeItem("cart");
+                        window.location.reload();
+                    }
+                })
+            }
             document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
             document.querySelector(".deliveryFees").innerHTML = `${deliveryFees} <span>ج.م</span>`;
             document.querySelector(".taxes").innerHTML = `---- <span>ج.م</span>`;
@@ -101,53 +232,6 @@ window.addEventListener("load",async()=>{
             const totalPrice = totalOfProducts + deliveryFees - discount;
             document.querySelector(".totalPriceValue").innerHTML = totalPrice;
             // change quantity
-            productElement.querySelector(".product-quantity input").addEventListener("change",(e)=>{
-                const newQuantity = parseInt(e.target.value);
-                if(item.avaliableSizes && newQuantity <= item.avaliableSizes[product.size]){
-                    if(newQuantity >= 1){
-                        const newTotalPrice = item.newPrice * newQuantity;
-                        productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} ج.م`;
-                        totalOfProducts = totalOfProducts - (item.newPrice * product.quantity) + newTotalPrice;
-                        document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-                        document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
-                        const totalPrice = totalOfProducts + deliveryFees - discount;
-                        document.querySelector(".totalPriceValue").innerHTML = totalPrice;
-                        // update cart
-                        Object.values(cart).forEach(p=>{
-                        if(p.productId === product.productId && p.size === product.size){
-                            p.quantity = newQuantity;
-                        }
-                        })
-                        window.localStorage.cart = JSON.stringify(cart);
-                    }else{
-                        alert("Quantity must be at least 1");
-                        e.target.value = product.quantity;
-                    }
-                }else{
-                    alert(`The requested quantity is not available. The available quantity for size ${product.size} is only ${item.avaliableSizes ? item.avaliableSizes[product.size] : 0} pieces.`);
-                    e.target.value = product.quantity;
-                }
-            })
-            productElement.querySelector(".deleteItem").addEventListener("click",()=>{
-                productsContainer.removeChild(productElement);
-                totalOfProducts -= productTotalPrice;
-                document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-                document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
-                const totalPrice = totalOfProducts + deliveryFees - discount;
-                document.querySelector(".totalPriceValue").innerHTML = totalPrice;
-                // remove from cart
-                delete cart[Object.keys(cart).find(key=>cart[key].productId === product.productId && cart[key].size === product.size)];
-                //reindex cart
-                const reindexedCart = {};
-                Object.values(cart).forEach((p, index) => {
-                    reindexedCart[index] = p;
-                });
-                window.localStorage.cart = JSON.stringify(reindexedCart);
-                if(Object.values(cart).length === 0){
-                    window.localStorage.removeItem("cart");
-                    window.location.reload();
-                }
-            })
         })
         
         {//discount
@@ -183,10 +267,12 @@ window.addEventListener("load",async()=>{
                 method.querySelector("input").checked = true;
                 method.classList.add("active");
                 finalPaymentMethod = method.querySelector("input").id;
-                console.log(finalPaymentMethod);
                 //vfcash
                 if(method.querySelector("input").id === "vodafoneCash"){
                     method.querySelector(".payment-details").style.display = "block";
+                    setTimeout(() => {
+                        method.querySelector(".payment-details").style.display = "none";
+                    }, 10000);
                 }else{
                     document.querySelectorAll(".paymentMethods .method .payment-details").forEach(detail=>{
                     detail.style.display = "none";
