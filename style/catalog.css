@@ -13,6 +13,29 @@
   font-family: "IBM Plex Sans Arabic", sans-serif;
   font-weight: 400;
   font-style: normal;
+  scrollbar-width: thin; /* "auto" | "thin" | "none" */
+  scrollbar-color: #198754 #e6e7ea; /* thumb | track */
+}
+
+/* Works in Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 12px; /* scrollbar width */
+  height: 12px; /* scrollbar height (for horizontal) */
+}
+
+::-webkit-scrollbar-track {
+  background: #e6e7ea; /* track background */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #198754; /* thumb color */
+  border-radius: 8px; /* rounded corners */
+  border: 2px solid #e6e7ea; /* space around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #146c43; /* darker on hover */
 }
 
 ul {
@@ -617,7 +640,6 @@ header {
 .footer .row.first {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 50px;
   padding: 40px 0;
 }
 .footer .row.first .info {
@@ -690,6 +712,11 @@ header {
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .footer .row.first {
+    gap: 50px;
+  }
+}
 .footer {
   background-color: var(--exstracolor);
 }/*# sourceMappingURL=catalog.css.map */
