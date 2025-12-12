@@ -20,106 +20,206 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="shortcut icon" href="../../sources/icon.png" type="image/x-icon">
-    <title>تصميم التيشيرت</title>
+    <title>TNZY | T-shirt Designing</title>
 </head>
 <body>
     <div class="welcome d-none">
-        <p>Welcome to TNZY customised world.</p>
+        <p>Welcome to TNZY customised world.</p><span>|</span>
     </div>
 
     <div class="container">
-        <div class="optionsContainer">
-            <div class="material">
-                <h3>المواد</h3>
-                <div class="materials">
-                    <div class="materialOption" id="cotton">
+        <div class="optionsContainer ">
+            <div class="option material">
+                <div class="head">
+                    <h3>Material</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Choose the fabric that suits your style and comfort.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption" id="cotton">
                         <img src="../../sources/cotton.png" alt="Cotton">
-                        <p>قطن</p>
+                        <p>100% Cotton</p>
                     </div>
-                    <div class="materialOption" id="polyester">
+                    <div class="optionOption" id="polyester">
                         <img src="../../sources/polyester.png" alt="Polyester">
-                        <p>بوليستر</p>
+                        <p>50% Cotton</p>
                     </div>
-                    <!-- <div class="materialOption" id="blend">
-                        <img src="../../sources/blend.png" alt="Blend">
-                        <p>مخلوط</p>
-                    </div> -->
                 </div>
             </div>
-            <div class="style">
-                <h3>الأنماط</h3>
-                <div class="styles">
-                    <div class="styleOption" id="roundNeck">
-                        <img src="../../sources/round_neck.png" alt="Round Neck">
-                        <p>ياقة دائرية</p>
-                    </div>
-                    <div class="styleOption" id="vNeck">
+            <div class="option style d-none">
+                <div class="head">
+                    <h3>Styles</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Select from a variety of T-shirt styles to match your personality. Whether you prefer the classic round-neck, the trendy V-neck, or the sporty polo, we have something for everyone.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption" id="vNeck">
                         <img src="../../sources/v_neck.png" alt="V Neck">
-                        <p>ياقة على شكل V</p>
+                        <p>V-neck</p>
                     </div>
-                    <div class="styleOption" id="polo">
+                    <div class="optionOption" id="polo">
                         <img src="../../sources/polo.png" alt="Polo">
-                        <p>بولو</p>
+                        <p>Hoodie</p>
                     </div>
-                    <!-- <div class="styleOption" id="longSleeve">
-                        <img src="../../sources/long_sleeve.png" alt="Long Sleeve">
-                        <p>كم طويل</p>
-                    </div> -->
-                </div>
-            </div>
-            <div class="size">
-                <h3>المقاسات</h3>
-                <div class="sizes">
-                    <div class="sizeOption" id="S">S</div>
-                    <div class="sizeOption" id="M">M</div>
-                    <div class="sizeOption" id="L">L</div>
-                    <div class="sizeOption" id="XL">XL</div>
-                    <div class="sizeOption" id="XXL">XXL</div>
-                </div>
-            </div>
-            <div class="color">
-                <h3>الألوان</h3>
-                <div class="colors">
-                    <div class="colorOption" id="white" style="background-color: white;"></div>
-                    <div class="colorOption" id="black" style="background-color: black;"></div>
-                    <div class="colorOption" id="red" style="background-color: red;"></div>
-                    <div class="colorOption" id="blue" style="background-color: blue;"></div>
-                    <div class="colorOption" id="green" style="background-color: green;"></div>
-                    <div class="colorOption" id="yellow" style="background-color: yellow;"></div>
-                    <div class="colorOption" id="gray" style="background-color: gray;"></div>
-                    <div class="colorOption" id="pink" style="background-color: pink;"></div>
-                    <div class="colorOption" id="purple" style="background-color: purple;"></div>
-                    <div class="colorOption" id="orange" style="background-color: orange;"></div>
-                </div>
-            </div>
-            <div class="design">
-                <h3>التصميم</h3>
-                <div class="designOptions">
-                    <div class="designOption" id="uploadDesign">
-                        <i class="fa-solid fa-upload"></i>
-                        <p>رفع تصميم</p>
-                    </div>
-                    <div class="designOption" id="addText">
-                        <i class="fa-solid fa-text"></i>
-                        <p>إضافة نص</p>
-                    </div>
-                    <div class="designOption" id="chooseFromGallery">
-                        <i class="fa-solid fa-image"></i>
-                        <p>اختيار من المعرض</p>
+                    <div class="optionOption" id="roundNeck">
+                        <img src="../../sources/round_neck.png" alt="Round Neck">
+                        <p>Round-neck</p>
                     </div>
                 </div>
             </div>
-            <div class="preview">
-                <h3>المعاينة</h3>
+            <div class="option size d-none">
+                <div class="head">
+                    <h3>Sizes</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Find your perfect fit with our comprehensive size range. From Small (S) to Extra Extra Large (XXL), we ensure that everyone can enjoy a comfortable and flattering T-shirt.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption" id="S">Small</div>
+                    <div class="optionOption" id="M">Medium</div>
+                    <div class="optionOption" id="L">Large</div>
+                    <div class="optionOption" id="XL">XLarge</div>
+                    <div class="optionOption" id="XXL">XXLarge</div>
+                </div>
+            </div>
+            <div class="option color d-none">
+                <div class="head">
+                    <h3>Colors Pallette</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Express yourself with our vibrant color palette. Choose from classic shades like white and black, or make a statement with bold colors like red, blue, and green.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption colorPallette" data-color="white" style="background-color: white;"></div>
+                    <div class="optionOption colorPallette" data-color="black" style="background-color: black;"></div>
+                    <div class="optionOption colorPallette" data-color="red" style="background-color: red;"></div>
+                    <div class="optionOption colorPallette" data-color="blue" style="background-color: blue;"></div>
+                    <div class="optionOption colorPallette" data-color="green" style="background-color: green;"></div>
+                    <div class="optionOption colorPallette" data-color="yellow" style="background-color: yellow;"></div>
+                    <div class="optionOption colorPallette" data-color="gray" style="background-color: gray;"></div>
+                    <div class="optionOption colorPallette" data-color="pink" style="background-color: pink;"></div>
+                    <div class="optionOption colorPallette" data-color="purple" style="background-color: purple;"></div>
+                    <div class="optionOption colorPallette" data-color="orange" style="background-color: orange;"></div>
+                </div>
+            </div>
+            <div class="option design d-none">
+                <div class="head">
+                    <h3>Designs</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Personalize your T-shirt with your own design. Upload an image, add custom text, or choose from our gallery of graphics to create a one-of-a-kind look.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption" id="uploadDesign">
+                        <img src="../../sources/images.jpg" alt="">
+                        <p>Printing</p>
+                    </div>
+                    <div class="optionOption" id="addText">
+                        <img src="../../sources/needlework.jpg" alt="">
+                        <p>Needlework</p>
+                    </div>
+                </div>
+            </div>
+            <div class="option printing d-none">
+                <div class="head">
+                    <h3>Choose your print</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Upload your own image or enter a text prompt to generate a unique design using AI. Make your T-shirt truly one-of-a-kind with your personal touch.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption photo" id="chooseFromGallery">
+                        <img src="../../sources/upload.png" alt="">
+                        <p>Choose a photo</p>
+                    </div>
+                    <div class="optionOption gemini" id="chooseFromGallery">
+                        <img src="../../sources/gemini.png" alt="">
+                        <p>AI Generation</p>
+                    </div>
+                    <div class="photoPreview d-none">
+                        <div class="container2">
+                            <img id="previewImage" src="" alt="Preview" class="">
+                            <div class="image-side">
+                                <div class="tshirt-front">
+                                    <input type="radio" class="front-side" name="side" id="">
+                                    <label for="">Front Side</label>
+                                </div>
+                                <div class="tshirt-back">
+                                    <input type="radio" checked class="back-side" name="side" id="">
+                                    <label for="">Back Side</label>
+                                </div>
+                            </div>
+                            <div class="checkBtn">
+                                <button id="confirmPhoto" class="btn btn-success">Confirm</button>
+                                <button id="removePhoto" class="btn btn-danger">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="option preview d-none">
+                <h3>Preview</h3>
                 <div class="tshirtPreview">
-                    <img id="tshirtImage" src="../../sources/round_neck.png" alt="T-Shirt Preview">
-                    <div id="designLayer" class="designLayer"></div>
+                    <div class="imgcanvas">
+                        <img id="tshirtImage" src="../../sources/tshirt_backImg_mockup.png" alt="T-Shirt Preview">
+                    </div>
+                     <p>
+                        Note🔔: The preview image is for illustration purposes only and may not accurately represent the final product. Actual colors, designs, and styles may vary.
+                     </p>
+                     <p>
+                        Note🔔: We will contact you soon with the actual T-shirt color and style on Email and whatsapp.
+                     </p>
                 </div>
-                <button id="addToCart" class="btn btn-primary">إضافة إلى السلة</button>
+                <div class="action">
+                    <button id="resetDesign" onclick="window.location.reload();" class="btn btn-danger">Reset</button>
+                    <button id="tshirt-summary" class="btn btn-success">Continue</button>
+                </div>
             </div>
+        </div>
+        <div class="ztshirtsummary d-none">
+            <h3>T-shirt Summary</h3>
+            <div class="summaryDetails">
+                <p>Material: <span id="summaryMaterial"></span></p>
+                <p>Style: <span id="summaryStyle"></span></p>
+                <p>Size: <span id="summarySize"></span></p>
+                <p>Color: <span id="summaryColor"></span></p>
+                <p>Quantity: <input type="number" class="summaryQyantity" min="1" value="1"></p>
+                <p>Price: <span id="summaryPrice"></span></p>
+            </div>
+            <button id="proceedToCheckout" class="btn btn-success">Chechout</button>
+        </div>
+            
+        <div class="generating-Tshirt-loading d-none">
+            <video autoplay loop muted>
+                <source src="../../sources/generating.mp4" type="video/mp4">
+            </video>
         </div>
     </div>
 
-    <script type="module" src="../../script/designs.js"></script>
+    <div class="bodyBgVid">
+        <video autoplay muted loop>
+            <source src="../../sources/techvid.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="mainOverlay"></div>
+    <div class="ai-back-form d-none">
+        <div class="ai-cont-form">
+            <div class="ai-prompt">
+                <input type="text" name="" class="aiPrompt" placeholder="Ex: Sonic smiling on a beach eating an apple. " id="aiPrompt">
+            </div>
+            <div class="ai-generate-btn">
+                <button class="btn btn-success generateWithAI" id="generateWithAI">Generate Image</button>
+            </div>
+        </div>
+    </div>
+<script type="module" src="../../script/designs.js"></script>
 </body>
 </html>
