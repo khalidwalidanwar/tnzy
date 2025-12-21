@@ -274,6 +274,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  text-align:center;
 }
 .container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .photoUpload i {
   font-size: 20px;
