@@ -156,6 +156,19 @@ body {
     top: 30px !important;
   }
 }
+.d-none {
+  display: none !important;
+}
+
+#liveAlertPlaceholder {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 60%;
+  z-index: 999;
+  transition: 0.5s;
+}
+
 .mainOverlay {
   position: fixed;
   top: 0;
@@ -275,6 +288,10 @@ header {
 
 body {
   background-color: var(--maincolor);
+}
+
+hr {
+  margin: 10px 0 !important;
 }
 
 @media only screen and (max-width: 800px) {
@@ -518,21 +535,41 @@ body {
   display: grid;
   gap: 15px;
 }
-.orderPreview .orderContent .orderDetailsContent .order-item-detail {
-  border-bottom: 1px solid var(--maincolor);
-  padding-bottom: 10px;
+.orderPreview .orderContent .orderDetailsContent h4 {
+  margin-bottom: 0;
 }
-.orderPreview .orderContent .orderDetailsContent .order-item-detail .item-info {
+.orderPreview .orderContent .orderDetailsContent .order-items {
+  overflow-x: scroll;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  padding: 10px 5px;
 }
-.orderPreview .orderContent .orderDetailsContent .order-item-detail .item-info p {
-  margin: 0;
+.orderPreview .orderContent .orderDetailsContent .order-items .order-item-detail, .orderPreview .orderContent .orderDetailsContent .order-items .card {
+  width: 10rem;
+  min-width: 10rem;
+  position: relative;
+}
+.orderPreview .orderContent .orderDetailsContent .order-items .order-item-detail .totalPrice, .orderPreview .orderContent .orderDetailsContent .order-items .card .totalPrice {
+  border-top: 1px solid var(--maincolor);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  padding: 5px 0;
+  background-color: #dddddd;
+  text-align: center;
+}
+.orderPreview .orderContent .orderDetailsContent .order-items .order-item-detail p.last, .orderPreview .orderContent .orderDetailsContent .order-items .card p.last {
+  margin-bottom: 25px;
+}
+.orderPreview .orderContent .orderDetailsContent .order-items .order-item-detail p, .orderPreview .orderContent .orderDetailsContent .order-items .card p {
+  margin-bottom: 0;
 }
 .orderPreview .orderContent .orderDetailsContent .order-location-detail {
   border-bottom: 1px solid var(--maincolor);
   padding-bottom: 10px;
-  text-align: right;
 }
 .orderPreview .orderContent .orderDetailsContent .order-location-detail h4 {
   margin: 0 0 5px 0;
@@ -541,7 +578,6 @@ body {
   margin: 0;
 }
 .orderPreview .orderContent .orderDetailsContent .order-products-total, .orderPreview .orderContent .orderDetailsContent .order-total-detail, .orderPreview .orderContent .orderDetailsContent .order-shipping-detail {
-  text-align: right;
   font-weight: bold;
   font-size: 18px;
 }
@@ -581,7 +617,6 @@ body {
   gap: 15px;
 }
 .prompt .container .information input, .prompt .container .information select {
-  text-align: right;
   width: 90%;
   margin: auto;
   padding: 5px 10px;

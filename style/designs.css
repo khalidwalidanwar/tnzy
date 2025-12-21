@@ -156,6 +156,19 @@ body {
     top: 30px !important;
   }
 }
+.d-none {
+  display: none !important;
+}
+
+#liveAlertPlaceholder {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 60%;
+  z-index: 999;
+  transition: 0.5s;
+}
+
 .mainOverlay {
   position: fixed;
   top: 0;
@@ -212,6 +225,63 @@ body {
   padding: 20px;
   background-color: var(--secondarybgcolor);
   border-radius: 10px 10px 0 0;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  gap: 0;
+  color: #fff;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side {
+  padding: 10px;
+  width: 50%;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side:first-child {
+  border-right: 1px solid #ddd;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side h4 {
+  border-bottom: 1px dashed #ccc;
+  text-align: center;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont {
+  min-height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .phprv {
+  position: relative;
+  padding: 10px;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .phprv img {
+  max-width: 120px;
+  border-radius: 5px;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .phprv .removeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .phprv .removeBtn i {
+  color: #dc3545;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .photoUpload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .photoUpload i {
+  font-size: 20px;
+}
+.container .optionsContainer .option.printing-front-back .saveBtn {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
 }
 .container .optionsContainer .option {
   margin-bottom: 20px;
@@ -310,31 +380,10 @@ body {
 }
 .container .optionsContainer .photoPreview .container2 {
   background-color: #ddd;
-  padding: 20px;
   border-radius: 10px;
   text-align: center;
-  width: 70%;
-}
-.container .optionsContainer .photoPreview .container2 .image-side {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 15px;
-  margin-top: 15px;
-}
-.container .optionsContainer .photoPreview .container2 .image-side div {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.container .optionsContainer .photoPreview .container2 .image-side div input {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-.container .optionsContainer .photoPreview .container2 .image-side div label {
-  font-weight: bold;
-  cursor: pointer;
+  width: auto !important;
+  padding: 20px 60px !important;
 }
 .container .optionsContainer .photoPreview .container2 img {
   width: 265px;
@@ -343,13 +392,15 @@ body {
   border-radius: 10px;
 }
 .container .optionsContainer .photoPreview .container2 .checkBtn {
-  margin-top: 15px;
-  width: 100%;
+  width: -moz-fit-content;
+  width: fit-content;
   display: flex;
+  margin: auto;
+  gap: 15px;
+  margin-top: 15px;
 }
 .container .optionsContainer .photoPreview .container2 .checkBtn button {
-  width: 50%;
-  border-radius: 0;
+  font-size: 25px;
 }
 .container .optionsContainer .preview .tshirtPreview {
   position: relative;
@@ -357,23 +408,56 @@ body {
 }
 .container .optionsContainer .preview .tshirtPreview .imgcanvas {
   position: relative;
-  width: 230px;
-  height: 300px;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
   margin: auto;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
-.container .optionsContainer .preview .tshirtPreview img {
-  max-width: 230px;
-  filter: invert(1) invert(12%) sepia(59%) saturate(464%) hue-rotate(101deg) brightness(92%) contrast(90%);
+.container .optionsContainer .preview .tshirtPreview img#tshirtImage {
+  max-width: 280px;
+}
+.container .optionsContainer .preview .tshirtPreview .designFrontImage {
+  position: absolute;
+  top: 43%;
+  left: 27%;
+  transform: translate(-50%, -50%);
+  max-width: 50px;
+  max-height: 150px;
+  border-radius: 10px;
+  margin: 0 !important;
+}
+.container .optionsContainer .preview .tshirtPreview .designBackImage {
+  position: absolute;
+  top: 50%;
+  left: 73%;
+  transform: translate(-50%, -50%);
+  max-width: 51px;
+  max-height: 150px;
+  border-radius: 10px;
+  margin: 0 !important;
+}
+.container .optionsContainer .preview .tshirtPreview .designImage {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90px;
+  max-height: 150px;
+  border-radius: 10px;
+  margin: 0 !important;
 }
 .container .optionsContainer .preview .tshirtPreview p {
-  margin-top: 10px;
   font-size: 12px;
-  color: rgb(71, 2, 2);
-  max-width: 300px;
+  color: rgb(236, 236, 1);
+  max-width: 350px;
   margin: auto;
   margin-top: 15px;
+}
+.container .optionsContainer .preview .tshirtPreview :last-child {
+  margin-top: 5px;
 }
 .container .optionsContainer .preview .action {
   margin-top: 15px;
@@ -403,7 +487,9 @@ body {
   font-size: 15px;
   color: var(--mainFontcolor);
   text-align: left;
-  padding-left: 15%;
+  padding-right: 10px;
+  width: 50%;
+  display: inline;
 }
 .container .ztshirtsummary .summaryDetails p span {
   font-weight: bold;
@@ -416,6 +502,11 @@ body {
   outline: none;
   margin: 10px;
   padding: 5px 10px;
+}
+.container .ztshirtsummary .summaryDetails p.special {
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 .container .ztshirtsummary button {
   margin-top: 15px;
@@ -431,8 +522,15 @@ body {
 @media (max-width: 575px) {
   .container {
     border-radius: 0;
-    margin: 0;
-    min-height: 100vh;
+    margin: 0 auto;
+    margin-top: 15px;
+    width: 90% !important;
+  }
+  .container .checkBtn button {
+    font-size: 16px !important;
+  }
+  .container .optionOptions .optionOption img {
+    width: 80px !important;
   }
   .container .optionsContainer {
     border-radius: 0 0 10px 10px;
@@ -458,6 +556,25 @@ body {
     padding: 8px;
   }
 }
+.optionOption.inactivated {
+  opacity: 0.5;
+  cursor: not-allowed;
+  position: relative;
+}
+.optionOption.inactivated::after {
+  content: "Comming Soon....";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  opacity: 1;
+}
+
 .ai-back-form {
   position: fixed;
   width: 100%;

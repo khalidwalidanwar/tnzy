@@ -156,6 +156,19 @@ body {
     top: 30px !important;
   }
 }
+.d-none {
+  display: none !important;
+}
+
+#liveAlertPlaceholder {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 60%;
+  z-index: 999;
+  transition: 0.5s;
+}
+
 .mainOverlay {
   position: fixed;
   top: 0;
