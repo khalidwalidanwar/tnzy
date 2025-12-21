@@ -1,4 +1,4 @@
-import {getCookie, setCookie, eraseCookie} from './main.js';
+import {getCookie, setCookie, eraseCookie,appendAlert} from './main.js';
 import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from './app.js';
 // check if user is logged in
 window.addEventListener('load', () => {
@@ -18,7 +18,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     // Simple email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!emailPattern.test(email)){
-        alert('Please enter a valid email address.');
+        appendAlert('Please enter a valid email address.',"danger");
         return;
     }
     // Simulate sending a verification code to the email
@@ -41,10 +41,12 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
                 emailjs.send('service_82g1fut', 'template_9yw7zah', templateParams)
                     .then((response) => {
                         setCookie('userId', userDoc.id, 60*24*365); // 1 Year
-                        alert(`تم ارسال رمز التحقق الي ${email}. الرمز صالح لمدة 15 دقائق`);
-                        window.location.href = './verify.html';
+                        appendAlert(`A verification code has been sent to ${email}. The code is valid for 15 minutes.`,"success");
+                        setTimeout(() => {
+                            window.location.href = './verify.html';
+                        }, 5000);
                     }, (error) => {
-                        alert('Failed to send verification email. Please try again later.');
+                        appendAlert('Failed to send verification email. Please try again later.','warning');
                         console.log('FAILED...', error);
                     });
             });
@@ -56,17 +58,19 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
                 emailjs.send('service_82g1fut', 'template_9yw7zah', templateParams)
                     .then((response) => {
                         setCookie('userId', docRef.id, 60*24*365); // 1 Year
-                        alert(`تم ارسال رمز التحقق الي ${email}. الرمز صالح لمدة 15 دقائق`);
-                        window.location.href = './verify.html';
+                        appendAlert(`A verification code has been sent to ${email}. The code is valid for 15 minutes.`,"success");
+                        setTimeout(() => {
+                            window.location.href = './verify.html';
+                        }, 5000);
                     }, (error) => {
-                        alert('Failed to send verification email. Please try again later.');
+                        appendAlert('Failed to send verification email. Please try again later.','warning');
                         console.log('FAILED...', error);
                     });
             });
         }
     }).catch((error) => {
         console.error("Error checking user existence: ", error);
-        alert('An error occurred. Please try again later.');
+        appendAlert('An error occurred. Please try again later.',"danger");
     });
 });
 
