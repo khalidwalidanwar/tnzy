@@ -22,4 +22,28 @@ function eraseCookie(name) {
     document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 
-export {setCookie, getCookie, eraseCookie};
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type) => {
+  clearTimeout(ztime);
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" onclick="document.getElementById(`liveAlertPlaceholder`).style.right = `-100%`;" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('')
+
+  alertPlaceholder.append(wrapper);
+  alertPlaceholder.style.right = 0;
+  var ztime = setTimeout(() => {
+    wrapper.remove();
+  }, 5000);
+}
+
+// const alertTrigger = document.getElementById('liveAlertBtn')
+// if (alertTrigger) {
+//   alertTrigger.addEventListener('click', () => {
+//     appendAlert('Nice, you triggered this alert message!', 'danger')
+//   })
+// }
+export {setCookie, getCookie, eraseCookie, appendAlert};
