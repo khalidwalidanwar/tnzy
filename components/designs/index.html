@@ -40,11 +40,11 @@
                 <div class="optionOptions">
                     <div class="optionOption" id="cotton">
                         <img src="../../sources/cotton.png" alt="Cotton">
-                        <p>100% Cotton</p>
+                        <p>High Quality</p>
                     </div>
-                    <div class="optionOption" id="polyester">
+                    <div class="optionOption inactivated" id="polyester">
                         <img src="../../sources/polyester.png" alt="Polyester">
-                        <p>50% Cotton</p>
+                        <p>Meduim Quality</p>
                     </div>
                 </div>
             </div>
@@ -54,18 +54,18 @@
                     <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
                 </div>
                 <p class="optionDesc">
-                    Select from a variety of T-shirt styles to match your personality. Whether you prefer the classic round-neck, the trendy V-neck, or the sporty polo, we have something for everyone.
+                    Select from a variety of T-shirt styles to match your personality. Whether you prefer the classic round-neck, the trendy V-neck, or the Hoodie, we have something for everyone.
                 </p>
                 <div class="optionOptions">
-                    <div class="optionOption" id="vNeck">
+                    <div class="optionOption inactivated" id="vNeck">
                         <img src="../../sources/v_neck.png" alt="V Neck">
                         <p>V-neck</p>
                     </div>
-                    <div class="optionOption" id="polo">
-                        <img src="../../sources/polo.png" alt="Polo">
+                    <div class="optionOption" id="Hoodie">
+                        <img src="../../sources/polo.png" alt="Hoodie">
                         <p>Hoodie</p>
                     </div>
-                    <div class="optionOption" id="roundNeck">
+                    <div class="optionOption inactivated" id="roundNeck">
                         <img src="../../sources/round_neck.png" alt="Round Neck">
                         <p>Round-neck</p>
                     </div>
@@ -80,7 +80,7 @@
                     Find your perfect fit with our comprehensive size range. From Small (S) to Extra Extra Large (XXL), we ensure that everyone can enjoy a comfortable and flattering T-shirt.
                 </p>
                 <div class="optionOptions">
-                    <div class="optionOption" id="S">Small</div>
+                    <div class="optionOption inactivated" id="S">Small</div>
                     <div class="optionOption" id="M">Medium</div>
                     <div class="optionOption" id="L">Large</div>
                     <div class="optionOption" id="XL">XLarge</div>
@@ -108,6 +108,29 @@
                     <div class="optionOption colorPallette" data-color="orange" style="background-color: orange;"></div>
                 </div>
             </div>
+            <div class="option side d-none">
+                <div class="head">
+                    <h3>Side to print</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Choose which side of the T-shirt you'd like to print your design on.
+                </p>
+                <div class="optionOptions">
+                    <div class="optionOption" id="back">
+                        <img src="../../sources/tshirt_backImg_mockup.png" alt="V Neck">
+                        <p>Back</p>
+                    </div>
+                    <div class="optionOption" id="front">
+                        <img src="../../sources/tshirt_frontImg_mockup.png" alt="Hoodie">
+                        <p>Front</p>
+                    </div>
+                    <div class="optionOption" id="back-front">
+                        <img src="../../sources/back-front.jpeg" alt="Round Neck">
+                        <p>Back + Front</p>
+                    </div>
+                </div>
+            </div>
             <div class="option design d-none">
                 <div class="head">
                     <h3>Designs</h3>
@@ -119,11 +142,11 @@
                 <div class="optionOptions">
                     <div class="optionOption" id="uploadDesign">
                         <img src="../../sources/images.jpg" alt="">
-                        <p>Printing</p>
+                        <p>Photo</p>
                     </div>
                     <div class="optionOption" id="addText">
                         <img src="../../sources/needlework.jpg" alt="">
-                        <p>Needlework</p>
+                        <p>Text</p>
                     </div>
                 </div>
             </div>
@@ -138,7 +161,7 @@
                 <div class="optionOptions">
                     <div class="optionOption photo" id="chooseFromGallery">
                         <img src="../../sources/upload.png" alt="">
-                        <p>Choose a photo</p>
+                        <p>Upload a photo</p>
                     </div>
                     <div class="optionOption gemini" id="chooseFromGallery">
                         <img src="../../sources/gemini.png" alt="">
@@ -147,35 +170,74 @@
                     <div class="photoPreview d-none">
                         <div class="container2">
                             <img id="previewImage" src="" alt="Preview" class="">
-                            <div class="image-side">
-                                <div class="tshirt-front">
-                                    <input type="radio" class="front-side" name="side" id="">
-                                    <label for="">Front Side</label>
-                                </div>
-                                <div class="tshirt-back">
-                                    <input type="radio" checked class="back-side" name="side" id="">
-                                    <label for="">Back Side</label>
-                                </div>
-                            </div>
                             <div class="checkBtn">
-                                <button id="confirmPhoto" class="btn btn-success">Confirm</button>
-                                <button id="removePhoto" class="btn btn-danger">Remove</button>
+                                <button id="removePhoto" class="btn btn-danger"><i class="fa-regular fa-circle-xmark"></i></button>
+                                <button id="confirmPhoto" class="btn btn-success"><i class="fa-regular fa-circle-check"></i></button>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="option printing-front-back d-none">
+                <div class="head">
+                    <h3>Choose your print</h3>
+                    <span class="arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                </div>
+                <p class="optionDesc">
+                    Upload your own image to generate a unique design. Make your T-shirt truly one-of-a-kind with your personal touch.
+                </p>
+                <div class="optionOptions">
+                    <div class="back-front-side">
+                        <h4>Back Side</h4>
+                        <div class="side-cont photo" id="chooseFromGalleryBack">
+                            <div class="photoUpload">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                Upload a photo
+                                <input type="file" name="" id="Back" class="d-none">
+                            </div>
+                            <div class="photoPreviewBack phprv d-none">
+                                <img id="previewImageBack" src="" alt="Preview" class="">
+                                <div class="removeBtn">
+                                    <button id="removePhotoBack" class="btn btn--outline-danger"><i class="fa-regular fa-circle-xmark"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="back-front-side">
+                        <h4>Front Side</h4>
+                        <div class="side-cont photo" id="chooseFromGalleryFront">
+                            <div class="photoUpload">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                Upload a photo
+                                <input type="file" name="" id="Front" class="d-none">
+                            </div>
+                            <div class="photoPreviewFront phprv d-none">
+                                <img id="previewImageFront" src="" alt="Preview" class="">
+                                <div class="removeBtn">
+                                    <button id="removePhotoFront" class="btn btn--outline-danger"><i class="fa-regular fa-circle-xmark"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="saveBtn">
+                    <button class="btn btn-success">Confirm</button>
                 </div>
             </div>
             <div class="option preview d-none">
                 <h3>Preview</h3>
                 <div class="tshirtPreview">
                     <div class="imgcanvas">
-                        <img id="tshirtImage" src="../../sources/tshirt_backImg_mockup.png" alt="T-Shirt Preview">
+                        <img id="tshirtImage" src="../../sources/tshirt_frontImg_mockup.png" alt="T-Shirt Preview">
+                        <img id="designImage" src="../../sources/loading.gif" alt="..." class="designImage d-none">
+                        <img id="designFrontImage" src="../../sources/loading.gif" alt="..." class="designFrontImage d-none">
+                        <img id="designBackImage" src="../../sources/loading.gif" alt="..." class="designBackImage d-none">
                     </div>
                      <p>
-                        Note🔔: The preview image is for illustration purposes only and may not accurately represent the final product. Actual colors, designs, and styles may vary.
+                        🔔Note: The preview image is for illustrative purposes only; we will contact you with a clearer image and more details.
                      </p>
                      <p>
-                        Note🔔: We will contact you soon with the actual T-shirt color and style on Email and whatsapp.
+                         🔔ملحوظه: الصورة المعروضة هي لأغراض التوضيح فقط ؛ سنتواصل معك بصورة أوضح ومزيد من التفاصيل.
                      </p>
                 </div>
                 <div class="action">
@@ -188,13 +250,13 @@
             <h3>T-shirt Summary</h3>
             <div class="summaryDetails">
                 <p>Material: <span id="summaryMaterial"></span></p>
-                <p>Style: <span id="summaryStyle"></span></p>
+                <p>Style: <span id="summaryStyle"></span></p><br>
                 <p>Size: <span id="summarySize"></span></p>
-                <p>Color: <span id="summaryColor"></span></p>
+                <p>Color: <span id="summaryColor"></span></p><br>
                 <p>Quantity: <input type="number" class="summaryQyantity" min="1" value="1"></p>
-                <p>Price: <span id="summaryPrice"></span></p>
+                <p class="special">Price: <span id="summaryPrice"></span></p>
             </div>
-            <button id="proceedToCheckout" class="btn btn-success">Chechout</button>
+            <button id="proceedToCheckout" class="btn btn-success">Add to cart</button>
         </div>
             
         <div class="generating-Tshirt-loading d-none">
@@ -210,6 +272,7 @@
         </video>
     </div>
     <div class="mainOverlay"></div>
+    <div id="liveAlertPlaceholder"></div>
     <div class="ai-back-form d-none">
         <div class="ai-cont-form">
             <div class="ai-prompt">
@@ -220,6 +283,6 @@
             </div>
         </div>
     </div>
-<script type="module" src="../../script/designs.js"></script>
+    <script type="module" src="../../script/designs.js"></script>
 </body>
 </html>
