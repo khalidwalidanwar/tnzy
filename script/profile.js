@@ -1,4 +1,4 @@
-import {getCookie, setCookie, eraseCookie} from './main.js';
+import {getCookie, setCookie, eraseCookie,appendAlert} from './main.js';
 import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from './app.js';
 
 const menu =document.querySelector("header .links .menu")
@@ -94,7 +94,7 @@ window.addEventListener("load", async()=>{
                             <p class="order-id">Order ID: ${order.orderId}</p>
                             <p class="order-date">Date: ${new Date(order.createdAt).toLocaleDateString()}</p>
                             <p class="order-status">Status: ${order.status}</p>
-                            <p class="order-total">Total: ج.م ${order.totalPrice}</p>
+                            <p class="order-total">Total: ${order.totalPrice} EGP</p>
                         </div>
                         <button class="view-details btn btn-info">View Details</button>
                     `;
@@ -102,103 +102,150 @@ window.addEventListener("load", async()=>{
                         const orderPreview = document.querySelector(".orderPreview");
                         const orderDetailsContent = document.querySelector(".orderPreview .orderDetailsContent");
                         orderDetailsContent.innerHTML = '';
+                        // order location
+                        const locationDiv = document.createElement("div");
+                        locationDiv.classList.add("order-location-detail");
+                        locationDiv.innerHTML = `
+                        <h4>Shipping information:-</h4>
+                        <p>Address: ${order.address.address}, ${order.address.city}, ${order.address.country}</p>
+                        <p>Phone: ${order.address.phone}</p>
+                        `;
+                        orderDetailsContent.appendChild(locationDiv);
+                        orderDetailsContent.innerHTML += '<div class="order-items"></div>';
+                        const orderItems = document.querySelector(".orderPreview .orderDetailsContent .order-items");
+                        // order items
                         Object.values(order.products).forEach(item => {
-                            getDoc(doc(db, "products", item.productId)).then((productSnap) => {
+                            getDoc(doc(db, "products", item.productId)).then(async(productSnap) => {
                                 if (productSnap.exists()) {
                                     const productData = productSnap.data();
                                     const itemDiv = document.createElement("div");
                                     itemDiv.classList.add("order-item-detail");
+                                    itemDiv.classList.add("card");
                                     itemDiv.innerHTML = `
-                                        <p><strong>Product:</strong> ${productData.title}</p>
-                                        <p><strong>Quantity:</strong> ${item.quantity}</p>
-                                        <p><strong>Size:</strong> ${item.size}</p>
-                                        <p><strong>Price:</strong> ج.م ${productData.newPrice}</p>
-                                        <p><strong>total:</strong> ج.م ${productData.newPrice * item.quantity}</p>
-                                        
+                                        <img src="../../sources/${productData.imgUrl[0]}" class='card-img-top' alt="${productData.title}" width="100">
+                                        <div class="card-body item-info">
+                                            <h5 class='card-title'>${productData.title}</h5>
+                                            <p>Quantity: ${item.quantity}</p>
+                                            <p>Size: ${item.size}</p>
+                                            <p class='last'>Price: ${productData.newPrice} EGP</p>
+                                            <p>.....</p>
+                                            <p class='totalPrice'><strong>Total</strong>: ${productData.newPrice * item.quantity} EGP</p>
+                                        </div>
                                     `;
-                                    orderDetailsContent.appendChild(itemDiv);
-                                    if(Object.values(order.products).indexOf(item) === Object.values(order.products).length - 1) {
-                                        // order location
-                                        const locationDiv = document.createElement("div");
-                                        locationDiv.classList.add("order-location-detail");
-                                        locationDiv.innerHTML = `
-                                            <h4>عنوان التوصيل:</h4>
-                                            <p>${order.address.address}, ${order.address.city}, ${order.address.country}</p>
-                                            <p>رقم الهاتف: ${order.address.phone}</p>
-                                            
-                                        `;
-                                        orderDetailsContent.appendChild(locationDiv);
-                                        // total products price
-                                        const productsTotalDiv = document.createElement("div");
-                                        productsTotalDiv.classList.add("order-products-total");
-                                        productsTotalDiv.innerHTML = `
-                                            <h4>اجمالي المنتجات: ج.م ${order.totalOfProducts}</h4>
-                                        `;
-                                        orderDetailsContent.appendChild(productsTotalDiv);
-                                        // shipping and discount info
-                                        const shippingDiv = document.createElement("div");
-                                        shippingDiv.classList.add("order-shipping-detail");
-                                        shippingDiv.innerHTML = `
-                                            <h4>التوصيل: ج.م ${order.deliveryFees}</h4>
-                                            ${order.couponCode ? `<h4>الخصم: - ج.م ${order.discount}</h4>` : ''}
-                                        `;
-                                        orderDetailsContent.appendChild(shippingDiv);
-                                        // total price
-                                        const totalDiv = document.createElement("div");
-                                        totalDiv.classList.add("order-total-detail");
-                                        totalDiv.innerHTML = `
-                                            <h4>الاجمالي: ج.م ${order.totalPrice}</h4>
-                                        `;
-                                        orderDetailsContent.appendChild(totalDiv);
-                                        // canceling order if order status is pending
-                                        if(order.status === 'pending') {
-                                            const cancelBtn = document.createElement("button");
-                                            cancelBtn.classList.add("btn", "btn-danger", "cancel-order");
-                                            cancelBtn.textContent = "Cancel Order";
-                                            cancelBtn.addEventListener("click", (e) => {
-                                                e.target.setAttribute("disabled", "");
-                                                if(confirm("Are you sure you want to cancel this order?")) {
-                                                    updateDoc(doc(db, "orders", orderSnap.id), {
-                                                        status: 'Cancelled'
-                                                    }).then(() => {
-                                                        alert("Order cancelled successfully.");
-                                                        window.location.reload();
-                                                    });
-                                                }
-                                            });
-                                            orderDetailsContent.appendChild(cancelBtn);
-                                        }else if(order.status === 'Cancelled'){
-                                            const cancelInfo = document.createElement("p");
-                                            cancelInfo.style.color = 'red';
-                                            cancelInfo.style.fontWeight = 'bold';
-                                            cancelInfo.textContent = "تم الغاء الاوردر";
-                                            orderDetailsContent.appendChild(cancelInfo);
-                                        }else if(order.status === 'Done'){
-                                            const cancelInfo = document.createElement("p");
-                                            cancelInfo.style.color = 'green';
-                                            cancelInfo.style.fontWeight = 'bold';
-                                            cancelInfo.textContent = "تم استلام الاوردر";
-                                            orderDetailsContent.appendChild(cancelInfo);
-                                        }else{
-                                            const cancelInfo = document.createElement("p");
-                                            cancelInfo.style.color = 'yellowgreen';
-                                            cancelInfo.style.fontWeight = 'bold';
-                                            cancelInfo.textContent = "الاوردر في طريقه اليك";
-                                            orderDetailsContent.appendChild(cancelInfo);
-                                        }
-                                        orderPreview.style.display = 'flex';
-                                    }
+                                    orderItems.appendChild(itemDiv);
                                 } else {
-                                    item.title = "Unknown Product";
+                                    // Customized product
+                                    var highQualitFees;
+                                    var lowQualityFees;
+                                    var printingFees;
+                                    // get product price from firebase based on TShirtDetails
+                                    const snap = await getDocs(collection(db, "products"));
+                                    snap.forEach(async (doc) => {
+                                        if(doc.id == "customized-product"){
+                                            const productData = doc.data();
+                                            highQualitFees = productData.high;
+                                            lowQualityFees = productData.low;
+                                            printingFees = productData.printing;
+                                        }
+                                    });
+                                    // calc. price
+                                    let price = 0;
+                                    item.material == "100% Cotton" ? price += highQualitFees : price += lowQualitFees;
+                                    item.printingImg != "" ? price += printingFees : "";
+                                    const productTotalPrice = price * item.quantity;
+                                    const itemDiv = document.createElement("div");
+                                    itemDiv.classList.add("order-item-detail");
+                                    itemDiv.classList.add("card");
+                                    itemDiv.innerHTML = `
+                                        <img src="../../sources/customTshirt.png" class='card-img-top' alt="Custom T-shirt" width="100">
+                                        <div class="card-body item-info">
+                                        <h5 class='card-title'>Custom T.</h5>
+                                        <p>{ ${item.size} , ${item.color} ${item.style} }</p>
+                                            <p>Quantity: ${item.quantity}</p>
+                                            <p class='last'>Price: ${price} EGP</p>
+                                            <p class='totalPrice'><strong>Total</strong>: ${productTotalPrice} EGP</p>
+                                        </div>
+                                    `;
+                                    orderItems.appendChild(itemDiv);
                                 }
+                                if(Object.values(order.products).indexOf(item) === Object.values(order.products).length - 1) {
+                                    // total products price
+                                    const productsTotalDiv = document.createElement("div");
+                                    productsTotalDiv.classList.add("order-products-total");
+                                    productsTotalDiv.innerHTML = `
+                                        <h4>Total products: ${order.totalOfProducts} EGP</h4><hr>
+                                    `;
+                                    orderDetailsContent.appendChild(productsTotalDiv);
+                                    // shipping and discount info
+                                    const shippingDiv = document.createElement("div");
+                                    shippingDiv.classList.add("order-shipping-detail");
+                                    shippingDiv.innerHTML = `
+                                        <h4>Shipping: ${order.deliveryFees} EGP</h4>
+                                        ${order.discount ? `<h4>Discount: -${order.discount} EGP</h4>` : ''}
+                                    `;
+                                    orderDetailsContent.appendChild(shippingDiv);
+                                    // total price
+                                    const totalDiv = document.createElement("div");
+                                    totalDiv.classList.add("order-total-detail");
+                                    totalDiv.innerHTML = `
+                                        <hr><h4>Total: ${order.totalPrice} EGP</h4>
+                                    `;
+                                    orderDetailsContent.appendChild(totalDiv);
+                                    // canceling order if order status is pending
+                                    if(order.status === 'pending') {
+                                        const cancelBtn = document.createElement("button");
+                                        cancelBtn.classList.add("btn", "btn-danger", "cancel-order");
+                                        cancelBtn.textContent = "Cancel Order";
+                                        cancelBtn.addEventListener("click", (e) => {
+                                            e.target.setAttribute("disabled", "");
+                                            if(confirm("Are you sure you want to cancel this order?")) {
+                                                updateDoc(doc(db, "orders", orderSnap.id), {
+                                                    status: 'Cancelled'
+                                                }).then(() => {
+                                                    appendAlert("Order cancelled successfully.","success");
+                                                    setTimeout(() => {
+                                                        window.location.reload();
+                                                    }, 5000);
+                                                });
+                                            }
+                                        });
+                                        orderDetailsContent.appendChild(cancelBtn);
+                                    }else if(order.status === 'cancelled'){
+                                        const cancelInfo = document.createElement("p");
+                                        cancelInfo.style.color = 'red';
+                                        cancelInfo.style.fontWeight = 'bold';
+                                        cancelInfo.textContent = "Order has been cancelled";
+                                        orderDetailsContent.appendChild(cancelInfo);
+                                    }else if(order.status === 'delivered'){
+                                        const cancelInfo = document.createElement("p");
+                                        cancelInfo.style.color = 'green';
+                                        cancelInfo.style.fontWeight = 'bold';
+                                        cancelInfo.textContent = "Delivered";
+                                        orderDetailsContent.appendChild(cancelInfo);
+                                    }else if(order.status === 'delivering'){
+                                        const cancelInfo = document.createElement("p");
+                                        cancelInfo.style.color = 'yellowgreen';
+                                        cancelInfo.style.fontWeight = 'bold';
+                                        cancelInfo.textContent = "Delivering";
+                                        orderDetailsContent.appendChild(cancelInfo);
+                                    }else if(order.status === 'preparing'){
+                                        const cancelInfo = document.createElement("p");
+                                        cancelInfo.style.color = 'darkgreen';
+                                        cancelInfo.style.fontWeight = 'bold';
+                                        cancelInfo.textContent = "Your order is being prepared.....";
+                                        orderDetailsContent.appendChild(cancelInfo);
+                                    }
+                                    orderPreview.style.display = 'flex';
+                                }
+                                orderPreview.style.display = 'flex';
                             })
-                        })
+                        });
                         
-                        document.querySelector(".orderPreview .controle").addEventListener("click",()=>{
+                        document.querySelector(".orderPreview .controle").addEventListener("click",(e)=>{
                             orderPreview.style.display = 'none';
                         });
-                        document.querySelector(".orderPreview").addEventListener("click",()=>{
-                            orderPreview.style.display = 'none';
+                        document.querySelector(".orderPreview").addEventListener("click",(e)=>{
+                            e.target.classList.contains("orderPreview")?orderPreview.style.display = 'none':"";
                         });
                     });
                     orderListContainer.appendChild(orderItem);
@@ -207,8 +254,10 @@ window.addEventListener("load", async()=>{
                 document.querySelector(".orders .noOrders").style.display='block';
             }
         } else {
-            alert("No such document!");
-            window.location.href = '../login/';
+            appendAlert("No such document!","secondary");
+            setTimeout(() => {
+                window.location.href = '../login/';
+            }, 5000);
         }
     }else{
         window.location.href = '../login/';
@@ -226,12 +275,16 @@ document.querySelector(".info .edit-profile").addEventListener("click",async()=>
                 firstName: fName.value,
                 lastName: lName.value,
             }).then(() => {
-                alert("Account info updated successfully!");
-                window.location.reload();
+                appendAlert("Account info updated successfully!","success");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
             });
         }else {
-            alert("No such document!");
-            window.location.href = '../login/';
+            appendAlert("No such document!","secondary");
+            setTimeout(() => {
+                window.location.href = '../login/';
+            }, 5000);
         }
     }else{
         window.location.reload();
@@ -244,7 +297,7 @@ document.querySelector(".info .add-address").addEventListener("click",()=>{
 })
 document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
     if(locationInput.value == "" || phoneInput.value =="" || cityInput.value == "" || countryInput.value == ""){
-        alert("Please fill all fields first !");
+        appendAlert("Please fill all fields first !","warning");
     }else{
         var patternPh = /^01[0-2,5][0-9]{8}$/;
         if(patternPh.test(phoneInput.value)){
@@ -261,7 +314,7 @@ document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
                     const found = Object.values(userData.addresses).find(item => item.phone == phoneInput.value);
                     if(found){
                         e.target.removeAttribute("disabled");
-                        alert("This phone number is already associated with another address.");
+                        appendAlert("This phone number is already associated with another address.","warning");
                         return;
                     }else{
                         if(userData.addresses && Object.values(userData.addresses).length > 0){
@@ -281,8 +334,10 @@ document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
                                     </div>
                                 `;
                                 document.querySelector(".address-list").appendChild(addressItem);
-                                alert("Address added successfully!");
-                                window.location.reload();
+                                appendAlert("Address added successfully!","success");
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 5000);   
                             });
                         }else{
                             updateDoc(doc(db, "users", userId), {
@@ -300,8 +355,10 @@ document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
                                 `;
                                 document.querySelector(".address-list").appendChild(addressItem);
                                 closePrompt();
-                                alert("Address added successfully!");
-                                window.location.reload();
+                                appendAlert("Address added successfully!","success");
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 5000);
                             });
                         }
                     }
@@ -314,13 +371,15 @@ document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
                     updateDoc(doc(db, "users", userId), {
                     addresses: zAddresses,
                     }).then(() => {
-                        alert("Address updated successfully!");
-                        window.location.reload();
+                        appendAlert("Address updated successfully!","success");
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 5000);
                     })
                 }
             }
         }else{
-            alert("Please enter a valid phone number !");
+            appendAlert("Please enter a valid phone number !","warning");
         }
     }
 })
@@ -359,12 +418,16 @@ document.querySelector("header .info .cart").addEventListener("click",()=>{
         if(window.localStorage.cart && Object.values(JSON.parse(window.localStorage.cart)).length > 0){
             window.location.href = '../orderConfirmation/cart.html';
         }else{
-            alert("Please add products to your cart first!");
-            window.location.href = '../catalog/';
+            appendAlert("Please add products to your cart first!","warning");
+            setTimeout(() => {
+                window.location.href = '../catalog/';
+            }, 5000);
         }
     }else{
-        alert('Please log in first!');
-        window.location.href = '../login/';
+        appendAlert('Please log in first!',"warning");
+        setTimeout(() => {
+            window.location.href = '../login/';
+        }, 5000);
     }
 });
 }
@@ -379,8 +442,10 @@ document.querySelector(".logout").addEventListener("click", function() {
     updateDoc(doc(db, "users", userId), {
         isVerified: false
     });
-    alert("You have been logged out.");
-    window.location.href = "../../";
+    appendAlert("You have been logged out.","success");
+    setTimeout(() => {
+        window.location.href = "../../";
+    }, 5000);
 });
 
 function closePrompt() {
