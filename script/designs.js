@@ -1,4 +1,4 @@
-import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from '../../script/app.js';
+import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from './app.js';
 
 window.addEventListener('DOMContentLoaded', () => {
     const welcomeMessage = document.querySelector('.welcome p');
@@ -539,3 +539,4 @@ import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/mai
 //     const data = await resp.json();
 //     console.log(data);
 // })()
+
