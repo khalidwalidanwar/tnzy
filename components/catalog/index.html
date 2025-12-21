@@ -44,6 +44,7 @@
             <button class="filter-btn" data-filter="tshirt">T-Shirts</button>
             <button class="filter-btn" data-filter="hoodie">Hoodies</button>
             <button class="filter-btn" data-filter="pants">Pants</button>
+            <button class="filter-btn" data-filter="favorite">Favorite</button>
         </div>
          <div class="product-grid">
             <p>No products yet.</p>
@@ -65,7 +66,7 @@
         <div class="productDetails">
           <h2 class="productTitle"></h2>
           <p class="productDescription"></p>
-          <div class="productPrice" data-lastPrice="230.00">Price:   <span></span> ج.م</div>
+          <div class="productPrice" data-lastPrice="230.00">Price:   <span></span> EGP</div>
           <div class="contc">
             <div class="quantity"> 
               <label for="quantity">Quantity:</label>
@@ -131,10 +132,11 @@
     </section>
 
     <div class="mainOverlay"></div>
+    <div id="liveAlertPlaceholder"></div>
 
 
   <script type="module">
-    import {getCookie, setCookie, eraseCookie} from '../../script/main.js';
+    import {getCookie, setCookie, eraseCookie,appendAlert} from '../../script/main.js';
     import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from '../../script/app.js';
 
     const userId = getCookie("userId");
@@ -147,15 +149,25 @@
         productGrid.querySelector("p").style.display = 'none';
         const snap = await getDocs(collection(db, "products"));
         snap.forEach(async (doc) => {
+          if(doc.id == 'customized-product'){
+            return;
+          }
           const data = doc.data();
           // append product-item
           var myfvpr = window.localStorage.favoriteProducts;
           var div = document.createElement("div");
           div.classList.add("card");
           div.setAttribute("data-productId",doc.id);
+          if(myfvpr){
+            for(var i=0;i< JSON.parse(myfvpr).length;i++){
+              if(JSON.parse(myfvpr)[i] == doc.id){
+                div.setAttribute("data-favorite","favorite");
+              }
+            }
+          }
           div.setAttribute("data-category",data.category);
           div.innerHTML=`
-            <img src="../../sources/${data.imgUrl[0]}" alt="White T-Shirt">
+            <img src="${data.imgUrl[0]}" alt="White T-Shirt">
             <div class="label ${data.status=="sale"?"sale":"new"}">${data.status=="sale"?"Sale":"New"}</div>
             <div class="favorite ${myfvpr?JSON.parse(myfvpr).includes(doc.id)?"active":"":""}">
               ${myfvpr?JSON.parse(myfvpr).includes(doc.id)?"❤️":'<i class="fa-solid fa-heart"></i>':'<i class="fa-solid fa-heart"></i>'}
@@ -163,8 +175,8 @@
             <div class="product-info">
               <div class="product-title">${data.title}</div>
               <div class="action">
-                <div class="price"> ج.م ${data.newPrice}</div>
-                <div class="lastPrice"> ج.م ${data.oldPrice}</div>
+                <div class="price">${data.newPrice} EGP</div>
+                <div class="lastPrice">${data.oldPrice} EGP</div>
                 <div class="add-to-cart">
                   <span class="cart-icon"><i class="fa-solid fa-cart-plus"></i></span> 
                 </div>
@@ -181,20 +193,20 @@
           }
 
           div.querySelector(".add-to-cart").addEventListener("click",()=>{
-            div.classList.contains("soldOutCard")?alert("This product is sold out."):
+            div.classList.contains("soldOutCard")?appendAlert("This product is sold out.","warning"):
             document.querySelector(".productPreview").classList.remove("d-none");
             // load images container
-            document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${data.imgUrl[0]}`;
+            document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${data.imgUrl[0]}`;
             const thumbnailContainer = document.querySelector(".productPreview .productImagesContainer .thumbnailContainer");
             thumbnailContainer.innerHTML = '';
             data.imgUrl.forEach((imgUrl, index) => {
               const thumbnail = document.createElement("img");
-              thumbnail.src = `../../sources/${imgUrl}`;
+              thumbnail.src = `${imgUrl}`;
               thumbnail.alt = `Thumbnail ${index + 1}`;
               thumbnail.classList.add("thumbnail");
               if (index === 0) thumbnail.classList.add("active");
               thumbnail.addEventListener("click", () => {
-                document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${imgUrl}`;
+                document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${imgUrl}`;
                 thumbnailContainer.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
                 thumbnail.classList.add("active");
               });
@@ -239,14 +251,14 @@
                           found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
                           window.localStorage.cart = JSON.stringify(zcart);
                           e.target.removeAttribute("disabled");
-                          alert("Product added to cart successfully!");
+                          appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
                       } else {
                           var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
                           zcart[Object.keys(zcart).length] = newProduct;
                           window.localStorage.cart = JSON.stringify(zcart);
                           e.target.removeAttribute("disabled");
-                          alert("Product added to cart successfully!");
+                          appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
                       }
                       
@@ -260,31 +272,33 @@
                       };
                       window.localStorage.cart = JSON.stringify(zcart);
                       e.target.removeAttribute("disabled");
-                      alert("Product added to cart successfully!");
+                      appendAlert("Product added to cart successfully!","success");
                   }
                   document.querySelector(".productPreview .closeBtn").click();
               }else{
-                  alert('Please log in first to add to cart.');
-                  window.location.href = '../login/';
+                  appendAlert('Please log in first to add to cart.',"warning");
+                  setTimeout(() => {
+                    window.location.href = '../login/';
+                  }, 5000);
               }
             }
           })
 
           div.querySelector("img").addEventListener("click",()=>{
-            div.classList.contains("soldOutCard")?alert("This product is sold out."):
+            div.classList.contains("soldOutCard")?appendAlert("This product is sold out.","warning"):
             document.querySelector(".productPreview").classList.remove("d-none");
             // load images container
-            document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${data.imgUrl[0]}`;
+            document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${data.imgUrl[0]}`;
             const thumbnailContainer = document.querySelector(".productPreview .productImagesContainer .thumbnailContainer");
             thumbnailContainer.innerHTML = '';
             data.imgUrl.forEach((imgUrl, index) => {
               const thumbnail = document.createElement("img");
-              thumbnail.src = `../../sources/${imgUrl}`;
+              thumbnail.src = `${imgUrl}`;
               thumbnail.alt = `Thumbnail ${index + 1}`;
               thumbnail.classList.add("thumbnail");
               if (index === 0) thumbnail.classList.add("active");
               thumbnail.addEventListener("click", () => {
-                document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${imgUrl}`;
+                document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${imgUrl}`;
                 thumbnailContainer.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
                 thumbnail.classList.add("active");
               });
@@ -329,14 +343,14 @@
                           found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
                           window.localStorage.cart = JSON.stringify(zcart);
                           e.target.removeAttribute("disabled");
-                          alert("Product added to cart successfully!");
+                          appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
                       } else {
                           var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
                           zcart[Object.keys(zcart).length] = newProduct;
                           window.localStorage.cart = JSON.stringify(zcart);
                           e.target.removeAttribute("disabled");
-                          alert("Product added to cart successfully!");
+                          appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
                       }
                       
@@ -349,12 +363,14 @@
                           }
                       };
                       window.localStorage.cart = JSON.stringify(zcart);
-                      alert("Product added to cart successfully!");
+                      appendAlert("Product added to cart successfully!","success");
                   }
                   document.querySelector(".productPreview .closeBtn").click();
               }else{
-                  alert('Please log in first to add to cart.');
-                  window.location.href = '../login/';
+                  appendAlert('Please log in first to add to cart.',"warning");
+                  setTimeout(() => {
+                    window.location.href = '../login/';
+                  }, 5000);
               }
             }
           })
@@ -390,6 +406,15 @@
                     } else {
                       productGrid.querySelector("p").style.display = 'none';
                     }
+                    if(filter === 'favorite'){
+                      cards.forEach(card => {
+                        if(card.getAttribute('data-favorite') === 'favorite'){
+                          card.classList.remove('hidden');
+                        }else{
+                          card.classList.add('hidden');
+                        }
+                      })
+                    }
                   });
               });
           });
@@ -420,8 +445,10 @@
                           }
                           // Here you can add code to actually handle the favorite action (e.g., update a database or local storage)
                       }else{
-                          alert('Please log in first to add to favorites.');
-                          window.location.href = '../login/';
+                          appendAlert('Please log in first to add to favorites.',"warning");
+                          setTimeout(() => {
+                            window.location.href = '../login/';
+                          }, 5000);
                       }
                   });
               });
@@ -481,11 +508,13 @@
             if(window.localStorage.cart && Object.values(JSON.parse(window.localStorage.cart)).length > 0){
                 window.location.href = '../orderConfirmation/cart.html';
             }else{
-                alert("Please add products to your cart first.");
+                appendAlert("Please add products to your cart first.","warning");
             }
         }else{
-            alert('Please log in first to view your cart.');
-            window.location.href = '../login/';
+            appendAlert('Please log in first to view your cart.',"warning");
+            setTimeout(() => {
+              window.location.href = '../login/';
+            }, 5000);
         }
     })
     }
