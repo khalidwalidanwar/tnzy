@@ -62,12 +62,16 @@ document.querySelector("header .info .cart").addEventListener("click",()=>{
         if(window.localStorage.cart && Object.values(JSON.parse(window.localStorage.cart)).length > 0){
             window.location.href = './components/orderConfirmation/cart.html';
         }else{
-            alert("Please add products to your cart.");
-            window.location.href = './components/catalog/';
+            appendAlert("Please add products to your cart first.","warning");
+            setTimeout(() => {
+                window.location.href = './components/catalog/';
+            }, 5000);
         }
     }else{
-        alert('Please log in first to view your cart.');
-        window.location.href = './components/login/';
+        appendAlert('Please log in first to view your cart.',"warning");
+        setTimeout(() => {
+            window.location.href = './components/login/';
+        }, 5000);
     }
 })
 // title hock
@@ -92,21 +96,27 @@ document.querySelector('.AI .prompt button').addEventListener('click', () => {
                 setCookie("aiPrompt", prompt, 1); // Store prompt for 1 day
                 window.location.href = './components/designs/';
             }else{
-                alert('Please enter a prompt to design your T-shirt.');
+                appendAlert('Please enter a prompt to design your T-shirt.',"warning");
             }
         }else{
-            alert('Please verify your email first to design your T-shirt.');
-            window.location.href = './components/login/verify.html';
+            appendAlert('Please verify your email first to design your T-shirt.',"warning");
+            setTimeout(() => {
+                window.location.href = './components/login/verify.html';
+            }, 5000);
         }
     }else{
-        alert('Please log in first to design your T-shirt.');
-        window.location.href = './components/login/';
+        appendAlert('Please log in first to design your T-shirt.',"warning");
+        setTimeout(() => {
+            window.location.href = './components/login/';
+        }, 5000);
     }
 });
 document.querySelector('.AI .prompt textarea').addEventListener('click', () => {
     if(!getCookie('userId') || getCookie("emailToVirify")){
-        alert('Please log in first to design your T-shirt.');
-        window.location.href = './components/login/';
+        appendAlert('Please log in first to design your T-shirt.',"warning");
+        setTimeout(() => {
+            window.location.href = './components/login/';
+        }, 5000);
     }
 });
 // end ai section
@@ -137,7 +147,7 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
             card.setAttribute("data-productId", productId);
             card.setAttribute("data-category", data.category);
             card.innerHTML = `
-                <img src="./sources/${data.imgUrl[0]}" alt="${data.title}">
+                <img src="${data.imgUrl[0]}" alt="${data.title}">
                 <div class="label ${data.status.toLowerCase()}">${data.status}</div>
                 <div class="favorite ${myfvpr?JSON.parse(myfvpr).includes(doc.id)?"active":"":""}">
                 ${myfvpr?JSON.parse(myfvpr).includes(doc.id)?"❤️":'<i class="fa-solid fa-heart"></i>':'<i class="fa-solid fa-heart"></i>'}
@@ -145,8 +155,8 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                 <div class="product-info">
                     <h4 class="product-title">${data.title}</h4>
                     <div class='action'>
-                        <div class="price">${data.newPrice} ج.م</div>
-                        <div class="lastPrice">${data.oldPrice} ج.م</div>
+                        <div class="price">${data.newPrice} EGP</div>
+                        <div class="lastPrice">${data.oldPrice} EGP</div>
                         <div class="add-to-cart">
                             <span class="cart-icon"><i class="fa-solid fa-cart-plus"></i></span> 
                         </div>
@@ -166,17 +176,17 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                     document.querySelector(".productPreview").classList.remove("d-none");
                     document.querySelector(".productPreview").style.display = 'flex';
                     // load images container
-                    document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${data.imgUrl[0]}`;
+                    document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${data.imgUrl[0]}`;
                     const thumbnailContainer = document.querySelector(".productPreview .productImagesContainer .thumbnailContainer");
                     thumbnailContainer.innerHTML = '';
                     data.imgUrl.forEach((imgUrl, index) => {
                     const thumbnail = document.createElement("img");
-                    thumbnail.src = `../../sources/${imgUrl}`;
+                    thumbnail.src = `${imgUrl}`;
                     thumbnail.alt = `Thumbnail ${index + 1}`;
                     thumbnail.classList.add("thumbnail");
                     if (index === 0) thumbnail.classList.add("active");
                     thumbnail.addEventListener("click", () => {
-                        document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${imgUrl}`;
+                        document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${imgUrl}`;
                         thumbnailContainer.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
                         thumbnail.classList.add("active");
                     });
@@ -221,14 +231,14 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                                 found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
                                 window.localStorage.cart = JSON.stringify(zcart);
                                 e.target.removeAttribute("disabled");
-                                alert("Product added to cart successfully!");
+                                appendAlert("Product added to cart successfully!","success");
                                 // window.location.href = '../orderConfirmation/cart.html';
                             } else {
                                 var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
                                 zcart[Object.keys(zcart).length] = newProduct;
                                 window.localStorage.cart = JSON.stringify(zcart);
                                 e.target.removeAttribute("disabled");
-                                alert("Product added to cart successfully!");
+                                appendAlert("Product added to cart successfully!","success");
                                 // window.location.href = '../orderConfirmation/cart.html';
                             }
                             
@@ -242,12 +252,14 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                             };
                             window.localStorage.cart = JSON.stringify(zcart);
                             e.target.removeAttribute("disabled");
-                            alert("Product added to cart successfully!");
+                            appendAlert("Product added to cart successfully!","success");
                         }
                         document.querySelector(".productPreview .closeBtn").click();
                     }else{
-                        alert('please log in first to add to cart.');
-                        window.location.href = '../login/';
+                        appendAlert('please log in first to add to cart.',"warning");
+                        setTimeout(() => {
+                            window.location.href = '../login/';
+                        }, 5000);
                     }
                     }
                 })
@@ -256,17 +268,17 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                 document.querySelector(".productPreview").classList.remove("d-none");
                 document.querySelector(".productPreview").style.display = 'flex';
                 // load images container
-                document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${data.imgUrl[0]}`;
+                document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${data.imgUrl[0]}`;
                 const thumbnailContainer = document.querySelector(".productPreview .productImagesContainer .thumbnailContainer");
                 thumbnailContainer.innerHTML = '';
                 data.imgUrl.forEach((imgUrl, index) => {
                 const thumbnail = document.createElement("img");
-                thumbnail.src = `../../sources/${imgUrl}`;
+                thumbnail.src = `${imgUrl}`;
                 thumbnail.alt = `Thumbnail ${index + 1}`;
                 thumbnail.classList.add("thumbnail");
                 if (index === 0) thumbnail.classList.add("active");
                 thumbnail.addEventListener("click", () => {
-                    document.querySelector(".productPreview .productImagesContainer .productImage img").src = `../../sources/${imgUrl}`;
+                    document.querySelector(".productPreview .productImagesContainer .productImage img").src = `${imgUrl}`;
                     thumbnailContainer.querySelectorAll(".thumbnail").forEach(thumb => thumb.classList.remove("active"));
                     thumbnail.classList.add("active");
                 });
@@ -311,13 +323,13 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                             found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
                             window.localStorage.cart = JSON.stringify(zcart);
                             e.target.removeAttribute("disabled");
-                            alert("Product added to cart successfully!");
+                            appendAlert("Product added to cart successfully!","success");
                         } else {
                             var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
                             zcart[Object.keys(zcart).length] = newProduct;
                             window.localStorage.cart = JSON.stringify(zcart);
                             e.target.removeAttribute("disabled");
-                            alert("Product added to cart successfully!");
+                            appendAlert("Product added to cart successfully!","success");
                         }
                         
                     }else{
@@ -329,12 +341,14 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                             }
                         };
                         window.localStorage.cart = JSON.stringify(zcart);
-                        alert("Product added to cart successfully!");
+                        appendAlert("Product added to cart successfully!","success");
                     }
                     document.querySelector(".productPreview .closeBtn").click();
                 }else{
-                    alert('please log in first to add to cart.');
-                    window.location.href = '../login/';
+                    appendAlert('please log in first to add to cart.',"warning");
+                    setTimeout(() => {
+                        window.location.href = '../login/';
+                    }, 5000);
                 }
                 }
             })
@@ -374,8 +388,10 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                     }
                     // Here you can add code to actually handle the favorite action (e.g., update a database or local storage)
                 }else{
-                    alert('please log in first to add to favorites.');
-                    window.location.href = '../login/';
+                    appendAlert('please log in first to add to favorites.',"warning");
+                    setTimeout(() => {
+                        window.location.href = '../login/';
+                    }, 5000);
                 }
             });
         });
@@ -421,8 +437,10 @@ giveStarsOf5.forEach((star, index) => {
             // Here you can add code to actually handle the star rating action (e.g., update a database or local storage)
             star.parentElement.setAttribute("data-rating", index + 1);
         }else{
-            alert('Please log in first to rate.');
-            window.location.href = './components/login/';
+            appendAlert('Please log in first to rate.',"warning");
+            setTimeout(() => {
+                window.location.href = './components/login/';
+            }, 5000);
         }
     });
 });
@@ -455,23 +473,27 @@ document.querySelector('.analyse .reviews button').addEventListener('click', asy
                             loadReviews();
                             input.value = '';
                             rates.removeAttribute("data-rating");
-                            alert('Thank you for sharing your review !');
+                            appendAlert('Thank you for sharing your review !',"info");
                             document.querySelector('.analyse .reviews button').removeAttribute("disabled");
                         });
                     }else{
-                        alert("Please complete your profile first to add a review.");
-                        window.location.href='./components/profile';
+                        appendAlert("Please complete your profile first to add a review.","warning");
+                        setTimeout(() => {
+                            window.location.href='./components/profile';
+                        }, 5000);
                     }
                 }
             }else{
-                alert('Please log in first to add a review.');
-                window.location.href = './components/login/';
+                appendAlert('Please log in first to add a review.',"warning");
+                setTimeout(() => {
+                    window.location.href = './components/login/';
+                }, 5000);
             }
         }else{
-            alert('Please enter a review before submitting.');
+            appendAlert('Please enter a review before submitting.',"warning");
         }
     }else{
-        alert('Please select a star rating before submitting your review.');
+        appendAlert('Please select a star rating before submitting your review.',"warning");
     }
 });
 window.addEventListener('scroll', function(e) {
@@ -527,5 +549,5 @@ const loadReviews = async () => {
 
 
 
-import {getCookie, setCookie, eraseCookie} from './main.js';
+import {getCookie, setCookie, eraseCookie,appendAlert} from './main.js';
 // eraseCookie("user")
