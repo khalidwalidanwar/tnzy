@@ -1,3 +1,5 @@
+import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from '../../script/app.js';
+
 window.addEventListener('DOMContentLoaded', () => {
     const welcomeMessage = document.querySelector('.welcome p');
     welcomeMessage.innerHTML = '';
@@ -20,12 +22,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // design options
 const optionsContainer = document.querySelector('.optionsContainer');
-const materialOptions = document.querySelectorAll('.option.material .optionOption');
-const styleOptions = document.querySelectorAll('.option.style .optionOption');
-const sizeOptions = document.querySelectorAll('.option.size .optionOption');
-const colorOptions = document.querySelectorAll('.option.color .optionOption');
-const designOptions = document.querySelectorAll('.option.design .optionOption');
-const printingOptions = document.querySelectorAll('.option.printing .optionOption');
+const materialOptions = document.querySelectorAll('.option.material .optionOption:not(.inactivated)');
+const styleOptions = document.querySelectorAll('.option.style .optionOption:not(.inactivated)');
+const sizeOptions = document.querySelectorAll('.option.size .optionOption:not(.inactivated)');
+const colorOptions = document.querySelectorAll('.option.color .optionOption:not(.inactivated)');
+const sideOptions = document.querySelectorAll('.option.side .optionOption:not(.inactivated)');
+const designOptions = document.querySelectorAll('.option.design .optionOption:not(.inactivated)');
+const printingFrontBack = document.querySelector('.option.printing-front-back');
+const printingOptions = document.querySelectorAll('.option.printing .optionOption:not(.inactivated)');
 const preview = document.querySelector('.option.preview');
 const summaryContainer = document.querySelector('.ztshirtsummary');
 const inputAITextForm = document.querySelector(".ai-back-form");
@@ -36,14 +40,23 @@ const TShirtDetails = {
     style: '',
     size: '',
     color: '',
+    side: 'back',
     quanatity: 1,
     designText: '',
     printingImg: '',
-    printingImgSide: 'back',
 }
+var highQualitFees;
+var lowQualityFees;
+var printingFees;
+let price = 0;
 var zcart = {};
 
-
+window.addEventListener('load', ()=>{
+    if(getCookie("aiPrompt")){
+        let prompt = decodeURIComponent(getCookie("aiPrompt"));
+        inputAITextForm.querySelector("input").value = prompt;
+    }
+});
 materialOptions.forEach((material)=>{
     material.addEventListener('click', ()=>{
         materialOptions.forEach((m)=>{m.classList.remove('selected');})
@@ -105,7 +118,7 @@ colorOptions.forEach((color)=>{
         summaryColor.innerText = color.getAttribute('data-color');
         setTimeout(() => {
             // show design options
-            document.querySelector('.option.design').classList.remove('d-none');
+            document.querySelector('.option.side').classList.remove('d-none');
             // hide color options
             TShirtDetails.color = color.getAttribute('data-color');
             document.querySelector('.option.color').classList.add('hidden');
@@ -113,6 +126,67 @@ colorOptions.forEach((color)=>{
         }, 600);
     });
 });
+sideOptions.forEach((side)=>{
+    side.addEventListener('click', ()=>{
+        sideOptions.forEach((c)=>{c.classList.remove('selected');})
+        side.classList.add('selected');
+        setTimeout(() => {
+            if(side.id !== 'back-front'){
+                // show design options
+                document.querySelector('.option.printing-front-back').classList.add('d-none');
+                document.querySelector('.option.design').classList.remove('d-none');
+            }else{
+                // show back-front printing
+                document.querySelector('.option.printing-front-back').classList.remove('d-none');
+                document.querySelector('.option.design').classList.add('d-none');
+            }
+            // hide side options
+            TShirtDetails.side = side.id;
+            document.querySelector('.option.side').classList.add('hidden');
+            document.querySelector('.option.side').classList.remove('active');
+        }, 600);
+    });
+});
+
+printingFrontBack.querySelectorAll(".optionOptions .photoUpload").forEach((uploadBtn)=>{
+    uploadBtn.addEventListener('click',(e)=>{
+        const inputFile = e.target.parentElement.querySelector("input");
+        inputFile.click();
+        inputFile.onchange = ()=>{
+            var file = inputFile.files[0];
+            if(file){
+                // image preview
+                let reader = new FileReader();
+                reader.onload = ()=>{
+                    // show image in photoPreview
+                    uploadBtn.classList.add("d-none")
+                    const photoPreview = uploadBtn.parentElement.querySelector('.phprv');
+                    photoPreview.classList.remove('d-none');
+                    photoPreview.querySelector("img").src = reader.result;
+                    TShirtDetails[`printing${inputFile.getAttribute("id")}Img`] =  file;
+                    photoPreview.querySelector(".removeBtn").addEventListener("click",(e)=>{
+                        uploadBtn.classList.remove("d-none")
+                        photoPreview.classList.add('d-none');
+                        photoPreview.querySelector("img").src = "";
+                        delete TShirtDetails[`printing${inputFile.getAttribute("id")}Img`];
+                    })
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+});
+printingFrontBack.querySelector(".saveBtn").addEventListener("click",()=>{
+    // check if both images are uploaded
+    if(!TShirtDetails.printingBackImg || !TShirtDetails.printingFrontImg){
+        appendAlert("Please upload back and front images to proceed.","warning");
+        return;
+    }else{
+        //load preview with both images
+        loadTshirtPreview("Front-back-view");
+    }
+})
+
 designOptions.forEach((design)=>{
     design.addEventListener('click', ()=>{
         designOptions.forEach((d)=>{d.classList.remove('selected');})
@@ -159,7 +233,6 @@ document.querySelector(".option.printing .photo").addEventListener('click', (e)=
                     photoPreview.querySelector("img").src = reader.result;
                     document.getElementById("confirmPhoto").addEventListener("click",(e)=>{
                         TShirtDetails.printingImg =  file;
-                        TShirtDetails.printingImgSide =  document.querySelector(".image-side input[type='radio']:checked").classList.contains("front-side") ? "front" : "back";
                         loadTshirtPreview("gallery");
                     })
                 }
@@ -181,6 +254,7 @@ document.querySelector(".option.printing .gemini").addEventListener('click', (e)
             if(inputAITextForm.querySelector("input").value.trim() != ""){
                 AIText = inputAITextForm.querySelector("input").value.trim();
                 inputAITextForm.classList.add("d-none");
+                eraseCookie("aiPrompt");
 
                 // disable confirm and remove buttons
                 document.getElementById("confirmPhoto").removeEventListener("click",()=>{});
@@ -216,20 +290,19 @@ document.querySelector(".option.printing .gemini").addEventListener('click', (e)
                     const blob = await fetch(url).then(r => r.blob());
                     const file = new File([blob], "image.png", { type: blob.type });
                     TShirtDetails.printingImg =  file;
-                    TShirtDetails.printingImgSide =  document.querySelector(".image-side input[type='radio']:checked").classList.contains("front-side") ? "front" : "back";
                     loadTshirtPreview("ai");
                 })
                 });
             }else{
-                alert("Please enter a valid prompt.");
+                appendAlert("Please enter a valid prompt.","danger");
             }
         }
     })
 })
-
-document.querySelector(".image-side .tshirt-front").addEventListener("click",(e)=>{e.target.parentElement.querySelector("input").click();});
-document.querySelector(".image-side .tshirt-back").addEventListener("click",(e)=>{e.target.parentElement.querySelector("input").click();});
-
+document.querySelector(".optionOption.inactivated").onclick =(e)=>{
+    e.preventDefault();
+    appendAlert("This option is currently unavailable.","warning");
+};
 
 // toggle options
 const optionHeads = document.querySelectorAll('.option .head');
@@ -284,10 +357,14 @@ function loadTshirtPreview(method){
         document.querySelector('.tshirtPreview img#tshirtImage').src = url;
         document.querySelector('.option.preview').classList.remove('d-none');
         document.querySelector(".generating-Tshirt-loading").classList.add("d-none");
-        })
+    }).catch(error => {
+        document.querySelector(".generating-Tshirt-loading").classList.add("d-none");
+        document.querySelector("#tshirt-summary").click();
+        console.error("Error generating image: ", error);
+        });
     }
     else if(method == "gallery" || method == "ai"){
-        // imagine printing preview using ai
+        // upload image to cloudinary
         var LogoImageFile = TShirtDetails.printingImg;
         const formData = new FormData();
         formData.append("file", LogoImageFile);
@@ -299,22 +376,77 @@ function loadTshirtPreview(method){
         .then(response => response.json())
         .then(data => {
             TShirtDetails.printingImg = data.secure_url;
-            document.querySelector('.tshirtPreview img#tshirtImage').src = `../../sources/tshirt_${TShirtDetails.printingImgSide}Img_mockup.png`;
+            document.querySelector('.tshirtPreview img#tshirtImage').src = `../../sources/tshirt_${TShirtDetails.side}Img_mockup.png`;
+            document.querySelector('.tshirtPreview img.designImage').src = TShirtDetails.printingImg;
+            TShirtDetails.side == "front" ? document.querySelector('.tshirtPreview img.designImage').style.top = "50%" : document.querySelector('.tshirtPreview img.designImage').style.top = "60%";
+            TShirtDetails.side == "front" ? document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "60px" : document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "90px";
+            document.querySelector('.tshirtPreview img.designImage').classList.remove('d-none');
             document.querySelector('.option.preview').classList.remove('d-none');
             document.querySelector(".generating-Tshirt-loading").classList.add("d-none");
         })
         .catch(error => {
             console.error("Error uploading image: ", error);
         });
+    }else if(method == "Front-back-view"){
+        var frontImage = TShirtDetails.printingFrontImg;
+        var backImage = TShirtDetails.printingBackImg;
+        const formData = new FormData();
+        formData.append("file", frontImage);
+        formData.append("upload_preset", uploadPreset);
+        fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            TShirtDetails.printingFrontImg = data.secure_url;
+            const formData = new FormData();
+            formData.append("file", backImage);
+            formData.append("upload_preset", uploadPreset);
+            fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                TShirtDetails.printingBackImg = data.secure_url;
+                document.querySelector('.tshirtPreview img#designFrontImage').src = TShirtDetails.printingFrontImg;
+                document.querySelector('.tshirtPreview img#designBackImage').src = TShirtDetails.printingBackImg;
+                document.querySelector('.tshirtPreview img#designFrontImage').classList.remove('d-none');
+                document.querySelector('.tshirtPreview img#designBackImage').classList.remove('d-none');
+                document.querySelector('.tshirtPreview img#tshirtImage').src = `../../sources/back-front.jpg`;
+                document.querySelector('.option.preview').classList.remove('d-none');
+                document.querySelector(".generating-Tshirt-loading").classList.add("d-none");
+            })
+            .catch(error => {
+                console.error("Error uploading Back image: ", error);
+            });
+        })
+        .catch(error => {
+            console.error("Error uploading Front image: ", error);
+        });
+        // upload images to cloudinary
     }
 }
 
-document.querySelector("#tshirt-summary").addEventListener("click",()=>{
+document.querySelector("#tshirt-summary").addEventListener("click",async(e)=>{
+    e.target.setAttribute("disabled","");
+    // get product price from firebase based on TShirtDetails
+    const snap = await getDocs(collection(db, "products"));
+    snap.forEach(async (doc) => {
+        if(doc.id == "customized-product"){
+            const productData = doc.data();
+            highQualitFees = productData.high;
+            lowQualityFees = productData.low;
+            printingFees = productData.printing;
+            e.target.removeAttribute("disabled");
+        }
+    });
     // calucate tshirt price
-    let price = 0;
-    TShirtDetails.material == "100% Cotton" ? price += 500 : price += 300;
-    TShirtDetails.printingImg != "" ? price += 80 : "";
-    document.getElementById("summaryPrice").innerText = "$" + price.toString();
+    TShirtDetails.material == "High Quality" ? price += highQualitFees : price += lowQualityFees;
+    TShirtDetails.printingBackImg && TShirtDetails.printingFrontImg ? price += parseInt(printingFees)*2 :
+    TShirtDetails.printingImg || TShirtDetails.printingBackImg || TShirtDetails.printingFrontImg ? price += printingFees : price+= parseInt(printingFees)*2;
+    document.getElementById("summaryPrice").innerText = + price.toString() + "EGP";
     summaryContainer.classList.toggle("d-none");
     document.querySelector('.option.preview').classList.add('d-none');
 })
@@ -325,10 +457,15 @@ document.querySelector(".summaryQyantity").addEventListener("change",(e)=>{
         e.target.value = 1;
     }
     TShirtDetails.quanatity = e.target.value;
-    document.getElementById("summaryPrice").innerText = "$" + (parseInt(document.getElementById("summaryPrice").innerText.replace("$","")) * TShirtDetails.quanatity).toString();
+    document.getElementById("summaryPrice").innerText = ((price) * TShirtDetails.quanatity).toString() + "EGP";
 })
 document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
     e.target.setAttribute("disabled","");
+    if(!TShirtDetails.material || !TShirtDetails.style || !TShirtDetails.size || !TShirtDetails.color){
+        e.target.removeAttribute("disabled");
+        appendAlert("Please complete your T-shirt design before proceeding to checkout.","warning");
+        return;
+    }
     // add product to cart and redirect to checkout page
     var newProduct = {
         productId: "custom-tshirt",
@@ -337,6 +474,7 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
         material:TShirtDetails.material,
         style:TShirtDetails.style,
         color:TShirtDetails.color,
+        side:TShirtDetails.side,
         designText:TShirtDetails.designText,
         printingImg:TShirtDetails.printingImg,
         printingImgSide:TShirtDetails.printingImgSide,
@@ -349,42 +487,37 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
             );
             if (found) {
                 e.target.removeAttribute("disabled");
-                alert("This product is already in your cart. Go to cart to update quantity if needed.");
+                appendAlert("This product is already in your cart. Go to cart to update quantity if needed.","warning");
             } else {
                 zcart[Object.keys(zcart).length] = newProduct;
                 window.localStorage.cart = JSON.stringify(zcart);
-                e.target.removeAttribute("disabled");
-                alert("Product added to cart successfully!");
-                window.location.href = '../orderConfirmation/cart.html';
+                appendAlert("Product added to cart successfully!","success");
+                setTimeout(() => {
+                    window.location.href = '../orderConfirmation/cart.html';
+                }, 5000);
             }
             
         }else{
             zcart = {
-                0:{newProduct}
+                0:newProduct
             };
             window.localStorage.cart = JSON.stringify(zcart);
-            alert("Product added to cart successfully!");
-            window.location.href = '../orderConfirmation/cart.html';
+            appendAlert("Product added to cart successfully!","success");
+            setTimeout(() => {
+                window.location.href = '../orderConfirmation/cart.html';
+            }, 5000);
         }
     }else{
-        alert('please log in first to add to cart.');
-        window.location.href = '../login/';
+        appendAlert('please log in first to add to cart.',"warning");
+        setTimeout(() => {
+            window.location.href = '../login/';
+        }, 5000);
     }
     // redirect to checkout page
     // window.location.href = "../../";
 })
 
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
+import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/main.js';
 
 
 
