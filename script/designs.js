@@ -517,7 +517,7 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
     // window.location.href = "../../";
 })
 
-import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/main.js';
+import { setCookie, getCookie, eraseCookie ,appendAlert } from './main.js';
 
 
 
@@ -539,4 +539,5 @@ import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/mai
 //     const data = await resp.json();
 //     console.log(data);
 // })()
+
 
