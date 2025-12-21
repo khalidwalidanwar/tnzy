@@ -26,12 +26,14 @@ window.addEventListener("load",async()=>{
         let totalOfProducts =0;
         let deliveryFees = 80;
         let discount = 0;
-        let dicounts = {
-            "TNZY10": 0.1, // 10% discount
-            "TNZY20": 0.2, // 20% discount
-            "TNZY30": 0.3, // 30% discount
-            "TNZY50": 0.5, // 50% discount
-        }
+        let dicounts;
+        const snap = await getDocs(collection(db, "products"));
+        snap.forEach(async (doc) => {
+            if(doc.id == "customized-product"){
+                const productData = doc.data();
+                dicounts = productData.copones;
+            }
+        });
         productsContainer.innerHTML ="";
 
         {// get user info
@@ -64,7 +66,7 @@ window.addEventListener("load",async()=>{
                 })
             }
         }
-
+        
         Object.values(cart).forEach(async (product)=>{
             const userRef = doc(db, "products", product.productId);
             const userSnap = await getDoc(userRef);
@@ -72,11 +74,25 @@ window.addEventListener("load",async()=>{
             if(!item){
                 // custom products like t-shirts
                 if(product.productId === "custom-tshirt"){
-                    item = product
+                    item = product;
+                    var highQualitFees;
+                    var lowQualityFees;
+                    var printingFees;
+                    // get product price from firebase based on TShirtDetails
+                    const snap = await getDocs(collection(db, "products"));
+                    snap.forEach(async (doc) => {
+                        if(doc.id == "customized-product"){
+                            const productData = doc.data();
+                            highQualitFees = productData.high;
+                            lowQualityFees = productData.low;
+                            printingFees = productData.printing;
+                        }
+                    });
                     // calc. price
                     let price = 0;
-                    item.material == "100% Cotton" ? price += 500 : price += 300;
-                    item.printingImg != "" ? price += 80 : "";
+                    item.material == "High Quality" ? price += highQualitFees : price += lowQualityFees;
+                    item.printingBackImg && item.printingFrontImg ? price += parseInt(printingFees)*2 :
+                    item.printingImg || item.printingBackImg || item.printingFrontImg ? price += printingFees : price+= parseInt(printingFees)*2;
                     const productTotalPrice = price * item.quantity;
                     totalOfProducts += productTotalPrice;
 
@@ -91,8 +107,9 @@ window.addEventListener("load",async()=>{
                         <div class="product-details">
                         <p class="product-size">Style: ${item.style || "Hoodie"}</p>
                         <p class="product-size">Size: ${item.size || "S"}</p>
-                        <p class="product-price" class="price">Price: <span>${price}</span> ج.م</p>
-                        <p class="product-price" class="price">Color: <span>${item.color}</span></p>
+                        <p class="product-size">Color: <span>${item.color}</span></p>
+                        <p class="product-size">Printing: <span>${item.side=="back-front"?"Front & Back":item.side}</span></p>
+                        <p class="product-price" class="price">Price: <span>${price}</span> EGP</p>
                         <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${item.quantity}" min="1"> </p>
                         </div>
                     </div>
@@ -101,7 +118,7 @@ window.addEventListener("load",async()=>{
                     </div>
                     <div class="totalPrice">
                         <p>Total : </p>
-                        <span class="totalProductPrice">${productTotalPrice} ج.م</span>
+                        <span class="totalProductPrice">${productTotalPrice} EGP</span>
                     </div>
                     <div class="deleteItem"><i class="fa-solid fa-close"></i></div>
                     `;
@@ -109,8 +126,8 @@ window.addEventListener("load",async()=>{
                     productElement.querySelector(".deleteItem").addEventListener("click",()=>{
                         productsContainer.removeChild(productElement);
                         totalOfProducts -= productTotalPrice;
-                        document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-                        document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                        document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>EGP</span>`;
+                        document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>EGP</span>`;
                         const totalPrice = totalOfProducts + deliveryFees - discount;
                         document.querySelector(".totalPriceValue").innerHTML = totalPrice;
                         // remove from cart
@@ -130,10 +147,10 @@ window.addEventListener("load",async()=>{
                         const newQuantity = parseInt(e.target.value);
                         if(newQuantity >= 1){
                             const newTotalPrice = price * newQuantity;
-                            productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} ج.م`;
+                            productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} EGP`;
                             totalOfProducts = totalOfProducts - (price * product.quantity) + newTotalPrice;
-                            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-                            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>EGP</span>`;
+                            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>EGP</span>`;
                             const totalPrice = totalOfProducts + deliveryFees - discount;
                             document.querySelector(".totalPriceValue").innerHTML = totalPrice;
                             // update cart
@@ -163,16 +180,16 @@ window.addEventListener("load",async()=>{
                     </div>
                     <div class="product-details">
                     <p class="product-size">Size: ${product.size || "S"}</p>
-                    <p class="product-price" class="price">Price: <span>${item.newPrice}</span> ج.م</p>
+                    <p class="product-price" class="price">Price: <span>${item.newPrice}</span> EGP</p>
                     <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${product.quantity}" min="1"> </p>
                     </div>
                 </div>
                 <div class="imgContainer">
-                    <img src="../../sources/${item.imgUrl[0]}" alt="">
+                    <img src="${item.imgUrl[0]}" alt="">
                 </div>
                 <div class="totalPrice">
                     <p>Total : </p>
-                    <span class="totalProductPrice">${productTotalPrice} ج.م</span>
+                    <span class="totalProductPrice">${productTotalPrice} EGP</span>
                 </div>
                 <div class="deleteItem"><i class="fa-solid fa-close"></i></div>
                 `;
@@ -182,10 +199,10 @@ window.addEventListener("load",async()=>{
                     if(item.avaliableSizes && newQuantity <= item.avaliableSizes[product.size]){
                         if(newQuantity >= 1){
                             const newTotalPrice = item.newPrice * newQuantity;
-                            productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} ج.م`;
+                            productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} EGP`;
                             totalOfProducts = totalOfProducts - (item.newPrice * product.quantity) + newTotalPrice;
-                            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-                            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>EGP</span>`;
+                            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>EGP</span>`;
                             const totalPrice = totalOfProducts + deliveryFees - discount;
                             document.querySelector(".totalPriceValue").innerHTML = totalPrice;
                             // update cart
@@ -207,8 +224,8 @@ window.addEventListener("load",async()=>{
                 productElement.querySelector(".deleteItem").addEventListener("click",()=>{
                     productsContainer.removeChild(productElement);
                     totalOfProducts -= productTotalPrice;
-                    document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-                    document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+                    document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>EGP</span>`;
+                    document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>EGP</span>`;
                     const totalPrice = totalOfProducts + deliveryFees - discount;
                     document.querySelector(".totalPriceValue").innerHTML = totalPrice;
                     // remove from cart
@@ -225,10 +242,10 @@ window.addEventListener("load",async()=>{
                     }
                 })
             }
-            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>ج.م</span>`;
-            document.querySelector(".deliveryFees").innerHTML = `${deliveryFees} <span>ج.م</span>`;
-            document.querySelector(".taxes").innerHTML = `---- <span>ج.م</span>`;
-            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>ج.م</span>`;
+            document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>EGP</span>`;
+            document.querySelector(".deliveryFees").innerHTML = `${deliveryFees} <span>EGP</span>`;
+            document.querySelector(".taxes").innerHTML = `---- <span>EGP</span>`;
+            document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>EGP</span>`;
             const totalPrice = totalOfProducts + deliveryFees - discount;
             document.querySelector(".totalPriceValue").innerHTML = totalPrice;
             // change quantity
@@ -237,9 +254,14 @@ window.addEventListener("load",async()=>{
         {//discount
             document.querySelector(".applyBtn").addEventListener("click",()=>{
             const code = document.querySelector(".discountCobone input");
-            if(dicounts[code.value]){
-                discount = Math.round((totalOfProducts + deliveryFees) * dicounts[code.value]);
-                document.querySelector(".taxes").innerHTML = `-${discount} <span>ج.م</span>`;
+            if(dicounts[(code.value).toUpperCase()]){
+                // add dicount number or percentage
+                if(dicounts[code.value.toUpperCase()] < 1){
+                    discount = Math.round((totalOfProducts + deliveryFees) * dicounts[code.value.toUpperCase()]);
+                }else{
+                    discount = dicounts[code.value.toUpperCase()];
+                }
+                document.querySelector(".taxes").innerHTML = `-${discount} <span>EGP</span>`;
                 const totalPrice = totalOfProducts + deliveryFees - discount;
                 document.querySelector(".totalPriceValue").innerHTML = totalPrice;
                 alert("Discount code applied successfully");
@@ -547,6 +569,4 @@ window.addEventListener("load",async()=>{
         }
 })
 }
-
-
 
