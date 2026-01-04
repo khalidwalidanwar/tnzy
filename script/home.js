@@ -86,41 +86,6 @@ window.addEventListener('scroll', function(e) {
         }
     });
 });
-
-// ai section
-document.querySelector('.AI .prompt button').addEventListener('click', () => {
-    if(getCookie('userId')){
-        if(!getCookie("emailToVirify")){
-            if(document.querySelector('.AI .prompt textarea').value.trim() !== '') {
-                const prompt = encodeURIComponent(document.querySelector('.AI .prompt textarea').value.trim());
-                setCookie("aiPrompt", prompt, 1); // Store prompt for 1 day
-                window.location.href = './components/designs/';
-            }else{
-                appendAlert('Please enter a prompt to design your T-shirt.',"warning");
-            }
-        }else{
-            appendAlert('Please verify your email first to design your T-shirt.',"warning");
-            setTimeout(() => {
-                window.location.href = './components/login/verify.html';
-            }, 5000);
-        }
-    }else{
-        appendAlert('Please log in first to design your T-shirt.',"warning");
-        setTimeout(() => {
-            window.location.href = './components/login/';
-        }, 5000);
-    }
-});
-document.querySelector('.AI .prompt textarea').addEventListener('click', () => {
-    if(!getCookie('userId') || getCookie("emailToVirify")){
-        appendAlert('Please log in first to design your T-shirt.',"warning");
-        setTimeout(() => {
-            window.location.href = './components/login/';
-        }, 5000);
-    }
-});
-// end ai section
-
 // load products
 const loadProducts = async (category, subname, containerSelector,zlimit) => {
     const container = document.querySelector(containerSelector);
