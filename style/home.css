@@ -416,6 +416,8 @@ section.AI {
   overflow: hidden;
   position: relative;
   color: #fff;
+  padding: 30px 0;
+  background-color: #2e2d2d;
 }
 section.AI img {
   width: 100%;
@@ -423,6 +425,7 @@ section.AI img {
 }
 
 .overlayAiSec {
+  padding: 10px 0;
   width: 100%;
   z-index: 1;
   text-align: center;
