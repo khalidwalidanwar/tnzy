@@ -666,6 +666,10 @@ section.analyse .container .card .stars i {
 section.analyse .container .card .stars i.filled {
   color: #ffc107;
 }
+section.analyse .container .card .card-text {
+  margin: auto;
+  max-width: 340px;
+}
 section.analyse .container .giveStarsOf5 {
   margin-top: 20px;
   display: flex;

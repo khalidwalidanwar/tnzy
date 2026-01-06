@@ -120,6 +120,9 @@ body {
   header .menu ul li:hover {
     scale: 1.1;
   }
+  section.trend {
+    padding-top: 48px !important;
+  }
 }
 @media only screen and (max-width: 600px) {
   .endless {
@@ -129,6 +132,9 @@ body {
   }
   .endless p {
     text-align: center !important;
+  }
+  #liveAlertPlaceholder {
+    width: 95% !important;
   }
 }
 @media only screen and (max-width: 500px) {

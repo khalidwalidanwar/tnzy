@@ -120,6 +120,9 @@ body {
   header .menu ul li:hover {
     scale: 1.1;
   }
+  section.trend {
+    padding-top: 48px !important;
+  }
 }
 @media only screen and (max-width: 600px) {
   .endless {
@@ -129,6 +132,9 @@ body {
   }
   .endless p {
     text-align: center !important;
+  }
+  #liveAlertPlaceholder {
+    width: 95% !important;
   }
 }
 @media only screen and (max-width: 500px) {
@@ -336,6 +342,7 @@ header {
   padding: 10px 0px;
 }
 .container .catalog .product-grid .card {
+  max-height: 206px;
   width: 150px;
   background: white;
   border-radius: 12px;
@@ -402,7 +409,7 @@ header {
   color: red;
 }
 .container .catalog .product-grid .product-info {
-  padding: 15px 20px;
+  padding: 15px 5px;
   height: 100%;
 }
 .container .catalog .product-grid .product-title {
@@ -647,6 +654,7 @@ header {
     gap: 5px;
   }
   .container .catalog .product-grid .card {
+    max-height: unset;
     margin-bottom: 10px;
   }
 }

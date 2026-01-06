@@ -120,6 +120,9 @@ body {
   header .menu ul li:hover {
     scale: 1.1;
   }
+  section.trend {
+    padding-top: 48px !important;
+  }
 }
 @media only screen and (max-width: 600px) {
   .endless {
@@ -129,6 +132,9 @@ body {
   }
   .endless p {
     text-align: center !important;
+  }
+  #liveAlertPlaceholder {
+    width: 95% !important;
   }
 }
 @media only screen and (max-width: 500px) {
@@ -333,11 +339,10 @@ body {
   font-size: 1em;
 }
 .container.cartContainer .right .userInfo .deliveryInfo .chooseLocation select {
-  padding: 10px;
+  padding: 5px 10px;
   border-radius: 5px;
-  border: 1px solid var(--bordercolor);
-  background-color: var(--inputbgcolor);
-  color: var(--textcolor);
+  border: 1px dashed #3f3f3f;
+  background-color: transparent;
   font-size: 1em;
   max-width: 200px;
 }
@@ -409,9 +414,7 @@ body {
   width: 60px;
   padding: 5px;
   border-radius: 5px;
-  border: 1px solid var(--bordercolor);
-  background-color: var(--inputbgcolor);
-  color: var(--textcolor);
+  border: 1px dashed #3f3f3f;
   font-size: 1em;
 }
 .container.cartContainer .right .orderInfo .products .product .details .product-details .product-quantity input:focus {

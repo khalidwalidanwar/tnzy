@@ -120,6 +120,9 @@ body {
   header .menu ul li:hover {
     scale: 1.1;
   }
+  section.trend {
+    padding-top: 48px !important;
+  }
 }
 @media only screen and (max-width: 600px) {
   .endless {
@@ -129,6 +132,9 @@ body {
   }
   .endless p {
     text-align: center !important;
+  }
+  #liveAlertPlaceholder {
+    width: 95% !important;
   }
 }
 @media only screen and (max-width: 500px) {
@@ -198,6 +204,7 @@ body {
   width: 100%;
   background: #000;
   z-index: 10;
+  margin-top: -15px;
 }
 .welcome p {
   margin: 0;
@@ -274,7 +281,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  text-align:center;
+  text-align: center;
 }
 .container .optionsContainer .option.printing-front-back .optionOptions .back-front-side .side-cont .photoUpload i {
   font-size: 20px;
@@ -357,13 +364,43 @@ body {
 .container .optionsContainer .optionOptions .optionOption p {
   margin-top: 5px;
   font-weight: bold;
+  margin-bottom: 0;
 }
 .container .optionsContainer .colorPallette {
-  width: 50px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   margin: 5px;
   cursor: pointer;
+  position: relative;
+}
+.container .optionsContainer .colorPallette::after {
+  content: attr(data-color);
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #fff;
+  width: 130%;
+  text-align: center;
+  font-weight: bold;
+}
+.container .optionsContainer .regularOversize {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+  color: #fff;
+}
+.container .optionsContainer .regularOversize .regularSizes {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+.container .optionsContainer .regularOversize .regularSizes a {
+  color: var(--maincolor);
 }
 .container .optionsContainer .gemini:hover {
   transform: none !important;
@@ -418,7 +455,7 @@ body {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 .container .optionsContainer .preview .tshirtPreview img#tshirtImage {
-  max-width: 280px;
+  max-width: 225px;
 }
 .container .optionsContainer .preview .tshirtPreview .designFrontImage {
   position: absolute;
@@ -430,12 +467,32 @@ body {
   border-radius: 10px;
   margin: 0 !important;
 }
+.container .optionsContainer .preview .tshirtPreview .designFrontImage.upperLeft {
+  top: 35%;
+  left: 31%;
+  max-width: 17px;
+}
+.container .optionsContainer .preview .tshirtPreview .designFrontImage.upperRight {
+  top: 35% !important;
+  left: 21% !important;
+  max-width: 17px !important;
+}
+.container .optionsContainer .preview .tshirtPreview .designFrontImage.upperMiddle {
+  top: 36%;
+  left: 27%;
+  max-width: 20px;
+}
+.container .optionsContainer .preview .tshirtPreview .designFrontImage.center {
+  top: 43%;
+  left: 27%;
+  max-width: 35px;
+}
 .container .optionsContainer .preview .tshirtPreview .designBackImage {
   position: absolute;
   top: 50%;
   left: 73%;
   transform: translate(-50%, -50%);
-  max-width: 51px;
+  max-width: 40px;
   max-height: 150px;
   border-radius: 10px;
   margin: 0 !important;
