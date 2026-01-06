@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="shortcut icon" href="../../sources/icon.png" type="image/x-icon">
-    <title>ZERO - Catalog</title>
+    <title>TNZY - Catalog</title>
 </head>
 <body>
 
@@ -31,8 +31,7 @@
             </div>
         </div>
         <div class="logo"><a href="../../">
-            <!-- <h1>Tee<span>N</span>zy</h1> -->
-            <img src="../../sources/logo.png" alt="ZERO">
+            <img src="../../sources/logo.png" alt="TNZY">
         </a></div>
     </header>
 
@@ -42,11 +41,11 @@
         <div class="nav">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="plain">Plain</button>
+            <button class="filter-btn" data-filter="trendy">Trendy</button>
             <button class="filter-btn" data-filter="career">Career</button>
             <button class="filter-btn" data-filter="sports">Sports</button>
             <button class="filter-btn" data-filter="creative">Creative</button>
-            <button class="filter-btn" data-filter="customized">Customized</button>
-            <button class="filter-btn" data-filter="favorite">Favorite</button>
+            <button class="filter-btn" data-filter="custom">Custom</button>
         </div>
          <div class="product-grid">
             <p>No products yet.</p>
@@ -68,7 +67,7 @@
         <div class="productDetails">
           <h2 class="productTitle"></h2>
           <p class="productDescription"></p>
-          <div class="productPrice" data-lastPrice="230.00">Price:   <span></span> EGP</div>
+          <div class="productPrice" data-lastPrice="230.00">Price:   <span></span> EGP  <oldPrice></oldPrice></div>
           <div class="contc">
             <div class="quantity"> 
               <label for="quantity">QTY:</label>
@@ -79,7 +78,27 @@
               <select id="size" name="size">
                 <!-- Options will be dynamically added here -->
               </select>
+              
             </div>
+          </div>
+          <div class="regularOversize">
+              <div class="regularSizes">
+                  <a href="https://res.cloudinary.com/dfochp65f/image/upload/v1767660480/jyod6bu4gtshgcoabgd1.jpg" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-solid fa-ruler"></i>
+                  </a>
+              </div>
+              <span>Regular</span>
+              <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" value="" id="checkNativeSwitch" switch>
+                  <label class="form-check-label" for="checkNativeSwitch">
+                      Oversize
+                  </label>
+              </div>
+              <div class="regularSizes">
+                  <a href="https://res.cloudinary.com/dfochp65f/image/upload/v1767660497/lqtjn1ktgd8f1ew1so50.jpg" target="_blank" rel="noopener noreferrer">
+                      <i class="fa-solid fa-ruler"></i>
+                  </a>
+              </div>
           </div>
           <button class="addToCartBtn">Add to cart</button>
         </div>
@@ -94,7 +113,7 @@
               <img src="../../sources/logo2.png" alt="">
             </div>
             <div class="aboutUs">
-              <p><span style="font-weight: bold;">ZERO</span> is an online store specializing in custom T-shirts and clothing. We offer you the opportunity to design your own T-shirt using advanced artificial intelligence technologies. Whether you're looking for a simple T-shirt or a unique design that reflects your personality, we're here to make it happen.</p>
+              <p><span style="font-weight: bold;">TNZY</span> is an online store specializing in custom T-shirts and clothing. We offer you the opportunity to design your own T-shirt using advanced artificial intelligence technologies. Whether you're looking for a simple T-shirt or a unique design that reflects your personality, we're here to make it happen.</p>
             </div>
             <div class="social">
             <a href="https://www.facebook.com/profile.php?id=61578806815180"><i class="fa-brands fa-facebook"></i></a>
@@ -117,13 +136,13 @@
             <h3>Contact Us</h3>
             <div class="contact-item">
               <p>Phone: 01019023299</p>
-              <p>Email: <a style="color: #fff;" href="mailto:zerot2026@gmail.com">zerot2026@gmail.com</a> </p>
+              <p>Email: <a style="color: #fff;" href="mailto:teenzy2525@gmail.com">teenzy2525@gmail.com</a> </p>
             </div>
             </div>
         </div>
         <div dir="rtl" class="row endless">
           <div class="col-10 text-end">
-            <p dir="ltr">&copy; 2025 All rights reserved for ZERO.</p>
+            <p dir="ltr">&copy; 2026 All rights reserved for TNZY.</p>
           </div>
           <div class="col-2 text-center">
             <img src="../../sources/vfcash.png" alt="Vodafone Cash" width="50px">
@@ -170,7 +189,7 @@
           div.setAttribute("data-category",data.subname);
           div.innerHTML=`
             <img src="${data.imgUrl[0]}" alt="White T-Shirt">
-            <div class="label ${data.status=="sale"?"sale":"new"}">${data.status=="sale"?"Sale":"New"}</div>
+            <div class="label ${data.status.toLowerCase()}">${data.status}</div>
             <div class="favorite ${myfvpr?JSON.parse(myfvpr).includes(doc.id)?"active":"":""}">
               ${myfvpr?JSON.parse(myfvpr).includes(doc.id)?"❤️":'<i class="fa-solid fa-heart"></i>':'<i class="fa-solid fa-heart"></i>'}
             </div>
@@ -217,7 +236,7 @@
             // end load images container
             document.querySelector(".productPreview .productTitle").innerText = data.title;
             document.querySelector(".productPreview .productDescription").innerText = data.description;
-            document.querySelector(".productPreview .productPrice").setAttribute("data-lastPrice",data.oldPrice?data.oldPrice:"");
+            document.querySelector(".productPreview .productPrice oldPrice").innerText = data.oldPrice?data.oldPrice+" EGP":"";
             document.querySelector(".productPreview .productPrice span").innerText = data.newPrice;
             document.querySelector(".productPreview .qtyInput").value = 1;
             const avaliableSizes = data.avaliableSizes || [""];
@@ -247,7 +266,9 @@
                   if(window.localStorage.cart && window.localStorage.cart.length > 0){
                       zcart = JSON.parse(window.localStorage.cart);
                       let found = Object.values(zcart).find(
-                      item => item.productId == productId &&  item.size == document.querySelector(".productPreview select").value
+                      item => item.productId == productId 
+                      &&  item.size == document.querySelector(".productPreview select").value
+                      && item.sizeType == (document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular")
                       );
                       if (found) {
                           found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
@@ -256,7 +277,12 @@
                           appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
                       } else {
-                          var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
+                          var newProduct = {
+                            productId: productId, 
+                            quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
+                            size:document.querySelector(".productPreview select").value,
+                            sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
+                          }
                           zcart[Object.keys(zcart).length] = newProduct;
                           window.localStorage.cart = JSON.stringify(zcart);
                           e.target.removeAttribute("disabled");
@@ -270,6 +296,7 @@
                               productId: productId,
                               quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
                               size:document.querySelector(".productPreview select").value,
+                              sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
                           }
                       };
                       window.localStorage.cart = JSON.stringify(zcart);
@@ -309,7 +336,7 @@
             // end load images container
             document.querySelector(".productPreview .productTitle").innerText = data.title;
             document.querySelector(".productPreview .productDescription").innerText = data.description;
-            document.querySelector(".productPreview .productPrice").setAttribute("data-lastPrice",data.oldPrice?data.oldPrice:"");
+            document.querySelector(".productPreview .productPrice oldPrice").innerText = data.oldPrice?data.oldPrice+" EGP":"";
             document.querySelector(".productPreview .productPrice span").innerText = data.newPrice;
             document.querySelector(".productPreview .qtyInput").value = 1;
             const avaliableSizes = data.avaliableSizes || [""];
@@ -339,7 +366,9 @@
                   if(window.localStorage.cart && window.localStorage.cart.length > 0){
                       zcart = JSON.parse(window.localStorage.cart);
                       let found = Object.values(zcart).find(
-                      item => item.productId == productId &&  item.size == document.querySelector(".productPreview select").value
+                      item => item.productId == productId 
+                      &&  item.size == document.querySelector(".productPreview select").value
+                      && item.sizeType == (document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular")
                       );
                       if (found) {
                           found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
@@ -348,23 +377,29 @@
                           appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
                       } else {
-                          var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
+                          var newProduct = {
+                            productId: productId, 
+                            quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
+                            size:document.querySelector(".productPreview select").value,
+                            sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
+                          }
                           zcart[Object.keys(zcart).length] = newProduct;
                           window.localStorage.cart = JSON.stringify(zcart);
                           e.target.removeAttribute("disabled");
                           appendAlert("Product added to cart successfully!","success");
                           // window.location.href = '../orderConfirmation/cart.html';
-                      }
-                      
+                        }
                   }else{
                       zcart = {
                           0:{
                               productId: productId,
                               quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
                               size:document.querySelector(".productPreview select").value,
+                              sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
                           }
                       };
                       window.localStorage.cart = JSON.stringify(zcart);
+                      e.target.removeAttribute("disabled");
                       appendAlert("Product added to cart successfully!","success");
                   }
                   document.querySelector(".productPreview .closeBtn").click();
@@ -378,13 +413,15 @@
           })
           productGrid.prepend(div)
         });
-        document.querySelector(".productPreview .closeBtn").addEventListener("click",()=>{
-          document.querySelector(".productPreview .productImage img").src = '';
-          document.querySelector(".productPreview .productTitle").innerText ='';
-          document.querySelector(".productPreview .productDescription").innerText = '';
-          document.querySelector(".productPreview .productPrice span").innerText = '';
-          document.querySelector(".productPreview .qtyInput").value = 1;
-          document.querySelector(".productPreview").classList.add("d-none");
+        document.querySelector(".productPreview").addEventListener("click",(e)=>{
+          if(e.target.classList.contains("closeBtn") || e.target.classList.contains("fa-solid fa-x") || e.target.classList.contains("productPreview")){
+            document.querySelector(".productPreview .productImage img").src = '';
+            document.querySelector(".productPreview .productTitle").innerText ='';
+            document.querySelector(".productPreview .productDescription").innerText = '';
+            document.querySelector(".productPreview .productPrice span").innerText = '';
+            document.querySelector(".productPreview .qtyInput").value = 1;
+            document.querySelector(".productPreview").classList.add("d-none");
+          }
         })
         {// filter categories
           const filterButtons = document.querySelectorAll(' .filter-btn');
