@@ -355,8 +355,7 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .container .optionsContainer .optionOptions .optionOption:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 .container .optionsContainer .optionOptions .optionOption.selected {
   border: 2px solid var(--maincolor);
