@@ -384,7 +384,7 @@ header {
   position: absolute;
   top: 12px;
   left: 12px;
-  background-color: red;
+  background-color: rgb(0, 87, 138);
   color: white;
   padding: 5px 10px;
   border-radius: 15px;
@@ -393,6 +393,9 @@ header {
 }
 .container .catalog .product-grid .label.new {
   background-color: var(--maincolor);
+}
+.container .catalog .product-grid .label.sale {
+  background-color: darkred;
 }
 .container .catalog .product-grid .favorite {
   position: absolute;
@@ -441,7 +444,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 20px;
+  padding: 10px;
   transition: 0.5s;
 }
 .container .catalog .product-grid .price {
@@ -500,9 +503,11 @@ header {
 .productPreview .previewCard .productImagesContainer .productImage {
   width: 100%;
   overflow: hidden;
-  border-radius: 10px;
+  text-align: center;
 }
 .productPreview .previewCard .productImagesContainer .productImage img {
+  border-radius: 10px;
+  max-width: 160px;
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
@@ -514,9 +519,11 @@ header {
 }
 .productPreview .previewCard .productImagesContainer .thumbnailContainer {
   display: flex;
-  justify-content: center;
   gap: 10px;
   margin-top: 10px;
+  overflow-x: scroll;
+  justify-content: start;
+  padding: 10px 0;
 }
 .productPreview .previewCard .productImagesContainer .thumbnailContainer .thumbnail {
   width: 60px;
@@ -556,32 +563,48 @@ header {
 .productPreview .previewCard .productDescription {
   font-size: 14px;
   color: #555;
-  margin-top: 10px;
+  margin: 0;
   text-align: center;
 }
 .productPreview .previewCard .productPrice {
   font-size: 18px;
-  font-weight: bold;
-  color: var(--maincolor);
+  color: #000;
   margin-top: 10px;
-  text-align: center;
+  text-align: left;
   position: relative;
 }
-.productPreview .previewCard .productPrice::after {
-  content: attr(data-lastPrice);
-  font-size: 14px;
+.productPreview .previewCard .productPrice span {
+  color: var(--maincolor);
+  font-weight: bold;
+}
+.productPreview .previewCard .productPrice oldPrice {
+  color: var(--maincolor);
+  margin-left: 15px;
   text-decoration: line-through;
-  color: #888;
-  position: absolute;
-  left: 80%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  text-decoration-color: #000;
+  font-size: 16px;
 }
 .productPreview .previewCard .contc {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+.productPreview .previewCard .regularOversize {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  color: #000;
+}
+.productPreview .previewCard .regularOversize .regularSizes {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+.productPreview .previewCard .regularOversize .regularSizes a {
+  color: var(--maincolor);
 }
 .productPreview .previewCard .quantity {
   width: -moz-fit-content;
@@ -654,7 +677,7 @@ header {
     gap: 5px;
   }
   .container .catalog .product-grid .card {
-    max-height: unset;
+    max-height: 270px;
     margin-bottom: 10px;
   }
 }
