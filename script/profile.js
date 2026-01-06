@@ -114,7 +114,44 @@ window.addEventListener("load", async()=>{
                         orderDetailsContent.innerHTML += '<div class="order-items"></div>';
                         const orderItems = document.querySelector(".orderPreview .orderDetailsContent .order-items");
                         // order items
-                        Object.values(order.products).forEach(item => {
+                        Object.values(order.products).forEach(async (item) => {
+                            if(item.productId == "custom-tshirt"){
+                                // Customized product
+                                var highQualitFees;
+                                var lowQualityFees;
+                                var printingFees;
+                                // get product price from firebase based on TShirtDetails
+                                const snap = await getDocs(collection(db, "products"));
+                                snap.forEach(async (doc) => {
+                                    if(doc.id == "customized-product"){
+                                        const productData = doc.data();
+                                        highQualitFees = productData.high;
+                                        lowQualityFees = productData.low;
+                                        printingFees = productData.printing;
+                                        // calc. price
+                                        let price = 0;
+                                        item.material == "High" ? price += highQualitFees : price += lowQualityFees;
+                                        item.printingBackImg && item.printingFrontImg ? price += parseInt(printingFees)*2 :
+                                        item.printingImg || item.printingBackImg || item.printingFrontImg ? price += printingFees : price+= parseInt(printingFees);
+                                        const productTotalPrice = price * item.quantity;
+                                        const itemDiv = document.createElement("div");
+                                        itemDiv.classList.add("order-item-detail");
+                                        itemDiv.classList.add("card");
+                                        itemDiv.innerHTML = `
+                                        <img src="../../sources/customTshirt.png" class='card-img-top' alt="Custom T-shirt" width="100">
+                                        <div class="card-body item-info">
+                                        <h5 class='card-title'>Custom T.</h5>
+                                        <p>{ ${item.size} , ${item.color} ${item.style} }</p>
+                                        <p>Quantity: ${item.quantity}</p>
+                                        <p class='last'>Price: ${price} EGP</p>
+                                        <p class='totalPrice'><strong>Total</strong>: ${productTotalPrice} EGP</p>
+                                        </div>
+                                        `;
+                                        orderItems.appendChild(itemDiv);
+                                        console.log("customized product found");
+                                    }
+                                });
+                            }
                             getDoc(doc(db, "products", item.productId)).then(async(productSnap) => {
                                 if (productSnap.exists()) {
                                     const productData = productSnap.data();
@@ -122,7 +159,7 @@ window.addEventListener("load", async()=>{
                                     itemDiv.classList.add("order-item-detail");
                                     itemDiv.classList.add("card");
                                     itemDiv.innerHTML = `
-                                        <img src="../../sources/${productData.imgUrl[0]}" class='card-img-top' alt="${productData.title}" width="100">
+                                        <img src="${productData.imgUrl[0]}" class='card-img-top' alt="${productData.title}" width="100">
                                         <div class="card-body item-info">
                                             <h5 class='card-title'>${productData.title}</h5>
                                             <p>Quantity: ${item.quantity}</p>
@@ -134,39 +171,7 @@ window.addEventListener("load", async()=>{
                                     `;
                                     orderItems.appendChild(itemDiv);
                                 } else {
-                                    // Customized product
-                                    var highQualitFees;
-                                    var lowQualityFees;
-                                    var printingFees;
-                                    // get product price from firebase based on TShirtDetails
-                                    const snap = await getDocs(collection(db, "products"));
-                                    snap.forEach(async (doc) => {
-                                        if(doc.id == "customized-product"){
-                                            const productData = doc.data();
-                                            highQualitFees = productData.high;
-                                            lowQualityFees = productData.low;
-                                            printingFees = productData.printing;
-                                        }
-                                    });
-                                    // calc. price
-                                    let price = 0;
-                                    item.material == "100% Cotton" ? price += highQualitFees : price += lowQualitFees;
-                                    item.printingImg != "" ? price += printingFees : "";
-                                    const productTotalPrice = price * item.quantity;
-                                    const itemDiv = document.createElement("div");
-                                    itemDiv.classList.add("order-item-detail");
-                                    itemDiv.classList.add("card");
-                                    itemDiv.innerHTML = `
-                                        <img src="../../sources/customTshirt.png" class='card-img-top' alt="Custom T-shirt" width="100">
-                                        <div class="card-body item-info">
-                                        <h5 class='card-title'>Custom T.</h5>
-                                        <p>{ ${item.size} , ${item.color} ${item.style} }</p>
-                                            <p>Quantity: ${item.quantity}</p>
-                                            <p class='last'>Price: ${price} EGP</p>
-                                            <p class='totalPrice'><strong>Total</strong>: ${productTotalPrice} EGP</p>
-                                        </div>
-                                    `;
-                                    orderItems.appendChild(itemDiv);
+                                    console.log("No such product document!");
                                 }
                                 if(Object.values(order.products).indexOf(item) === Object.values(order.products).length - 1) {
                                     // total products price
@@ -200,7 +205,7 @@ window.addEventListener("load", async()=>{
                                             e.target.setAttribute("disabled", "");
                                             if(confirm("Are you sure you want to cancel this order?")) {
                                                 updateDoc(doc(db, "orders", orderSnap.id), {
-                                                    status: 'Cancelled'
+                                                    status: 'cancelled'
                                                 }).then(() => {
                                                     appendAlert("Order cancelled successfully.","success");
                                                     setTimeout(() => {

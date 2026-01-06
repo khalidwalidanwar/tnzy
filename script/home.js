@@ -86,6 +86,13 @@ window.addEventListener('scroll', function(e) {
         }
     });
 });
+window.addEventListener('load', function(e) {
+    if(window.innerWidth > 425){
+        document.querySelector("#ai img").src = './sources/ai-back.png';
+    }else{
+        document.querySelector("#ai img").src = './sources/ai-back-small.png';
+    }
+});
 // load products
 const loadProducts = async (category, subname, containerSelector,zlimit) => {
     const container = document.querySelector(containerSelector);
@@ -367,8 +374,8 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
 };
 
 // Load products
-loadProducts('tshirt','','.topCollections .product-grid',15);
-loadProducts('pants','','.summerCollections .product-grid',15);
+loadProducts('tshirt','plain','.topCollections .product-grid',15);
+loadProducts('tshirt','trendy','.summerCollections .product-grid',15);
 
 window.addEventListener('scroll', () => {
     const productGrids = document.querySelectorAll('.collection .product-grid');
@@ -431,16 +438,23 @@ document.querySelector('.analyse .reviews button').addEventListener('click', asy
                 if (userSnap.exists()) {
                     const userData = userSnap.data();
                     if(userData.firstName || userData.lastName){
-                        document.querySelector('.analyse .reviews button').setAttribute("disabled", "");
-                        updateDoc(doc(db, "users", userId), {
-                            userComment:[input.value, parseInt(rates.getAttribute("data-rating"))],
-                        }).then(() => {
-                            loadReviews();
-                            input.value = '';
-                            rates.removeAttribute("data-rating");
-                            appendAlert('Thank you for sharing your review !',"info");
-                            document.querySelector('.analyse .reviews button').removeAttribute("disabled");
-                        });
+                        if(userData.orders && userData.orders.length > 0){
+                            document.querySelector('.analyse .reviews button').setAttribute("disabled", "");
+                            updateDoc(doc(db, "users", userId), {
+                                userComment:[input.value, parseInt(rates.getAttribute("data-rating"))],
+                            }).then(() => {
+                                loadReviews();
+                                input.value = '';
+                                rates.removeAttribute("data-rating");
+                                appendAlert('Thank you for sharing your review !',"info");
+                                document.querySelector('.analyse .reviews button').removeAttribute("disabled");
+                            });
+                        }else{
+                            appendAlert("You need to purchase first to add a review.","warning");
+                            setTimeout(() => {
+                                window.location.href='./components/catalog/';
+                            }, 5000);
+                        }
                     }else{
                         appendAlert("Please complete your profile first to add a review.","warning");
                         setTimeout(() => {

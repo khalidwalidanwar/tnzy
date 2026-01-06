@@ -1,11 +1,11 @@
-import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from './app.js';
+import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from '../../script/app.js';
 
 window.addEventListener('DOMContentLoaded', () => {
     const welcomeMessage = document.querySelector('.welcome p');
     welcomeMessage.innerHTML = '';
     // welcomeMessage.innerHTML = 'Welcome to TNZY customised world.';
     // write this messege letter by letter
-    const message = 'Welcome to TNZY customised world.';
+    const message = 'Welcome to ZERO customised world.';
     let index = 0;
     const interval = setInterval(() => {
         welcomeMessage.innerHTML += message[index];
@@ -27,6 +27,7 @@ const styleOptions = document.querySelectorAll('.option.style .optionOption:not(
 const sizeOptions = document.querySelectorAll('.option.size .optionOption:not(.inactivated)');
 const colorOptions = document.querySelectorAll('.option.color .optionOption:not(.inactivated)');
 const sideOptions = document.querySelectorAll('.option.side .optionOption:not(.inactivated)');
+const positionOptions = document.querySelectorAll('.option.position .optionOption:not(.inactivated)');
 const designOptions = document.querySelectorAll('.option.design .optionOption:not(.inactivated)');
 const printingFrontBack = document.querySelector('.option.printing-front-back');
 const printingOptions = document.querySelectorAll('.option.printing .optionOption:not(.inactivated)');
@@ -39,8 +40,10 @@ const TShirtDetails = {
     material: '',
     style: '',
     size: '',
+    sizeType:'regular',
     color: '',
     side: 'back',
+    position: '',
     quanatity: 1,
     designText: '',
     printingImg: '',
@@ -102,6 +105,7 @@ sizeOptions.forEach((size)=>{
             // show color options
             document.querySelector('.option.color').classList.remove('d-none');
             // hide size options
+            document.querySelector(".form-check-input").checked?TShirtDetails.sizeType = "oversize": TShirtDetails.sizeType = "regular";
             TShirtDetails.size = size.innerText;
             document.querySelector('.option.size').classList.add('hidden');
             document.querySelector('.option.size').classList.remove('active');
@@ -132,18 +136,50 @@ sideOptions.forEach((side)=>{
         side.classList.add('selected');
         setTimeout(() => {
             if(side.id !== 'back-front'){
-                // show design options
-                document.querySelector('.option.printing-front-back').classList.add('d-none');
-                document.querySelector('.option.design').classList.remove('d-none');
+                if(side.id == "front"){
+                    // show front printing
+                    document.querySelector('.option.printing-front-back').classList.add('d-none');
+                    document.querySelector('.option.position').classList.remove('d-none');
+                }else{
+                    // show back printing
+                    document.querySelector('.option.printing-front-back').classList.add('d-none');
+                    document.querySelector('.option.position').classList.add('d-none');
+                    document.querySelector('.option.printing').classList.remove('d-none');
+                }
             }else{
                 // show back-front printing
-                document.querySelector('.option.printing-front-back').classList.remove('d-none');
                 document.querySelector('.option.design').classList.add('d-none');
+                document.querySelector('.option.printing').classList.add('d-none');
+                document.querySelector('.option.position').classList.remove('d-none');
+                document.querySelector('.option.printing-front-back').classList.add('d-none');
             }
             // hide side options
             TShirtDetails.side = side.id;
             document.querySelector('.option.side').classList.add('hidden');
             document.querySelector('.option.side').classList.remove('active');
+        }, 600);
+    });
+});
+positionOptions.forEach((position)=>{
+    position.addEventListener('click', ()=>{
+        positionOptions.forEach((c)=>{c.classList.remove('selected');})
+        position.classList.add('selected');
+        setTimeout(() => {
+            if(TShirtDetails.side == "back-front"){
+                // show back-front printing
+                document.querySelector('.option.printing-front-back').classList.remove('d-none');
+                document.querySelector('.option.design').classList.add('d-none');
+                document.querySelector('.option.printing').classList.add('d-none');
+            }else{
+                // show printing options
+                document.querySelector('.option.printing').classList.remove('d-none');
+                document.querySelector('.option.design').classList.add('d-none');
+                document.querySelector('.option.printing-front-back').classList.add('d-none');
+            }
+            // hide position options
+            TShirtDetails.position = position.id;
+            document.querySelector('.option.position').classList.add('hidden');
+            document.querySelector('.option.position').classList.remove('active');
         }, 600);
     });
 });
@@ -189,27 +225,28 @@ printingFrontBack.querySelector(".saveBtn").addEventListener("click",()=>{
 
 designOptions.forEach((design)=>{
     design.addEventListener('click', ()=>{
-        designOptions.forEach((d)=>{d.classList.remove('selected');})
-        design.classList.add('selected');
-        if(design.id == "uploadDesign"){
-            document.querySelector('.printing').classList.remove('d-none');
-            document.querySelector('.option.design').classList.add('hidden');
-            document.querySelector('.option.design').classList.remove('active');
-        }else{
-            let designText = prompt("Enter your design text: ");
-            if(designText){
-                // hide design options
-                document.querySelector('.option.design').classList.add('hidden');
-                document.querySelector('.option.design').classList.remove('active');
-                document.querySelector('.option.printing').classList.add('d-none');
-                TShirtDetails.designText = designText;
-                // show preview options
-                document.querySelectorAll(".option").forEach((option)=>{
-                    option.classList.add('d-none');
-                })
-                loadTshirtPreview("needlework");
-            }
-        }
+        document.querySelector('.option.design').classList.add('d-none');
+        // designOptions.forEach((d)=>{d.classList.remove('selected');})
+        // design.classList.add('selected');
+        // if(design.id == "uploadDesign"){
+        //     document.querySelector('.printing').classList.remove('d-none');
+        //     document.querySelector('.option.design').classList.add('hidden');
+        //     document.querySelector('.option.design').classList.remove('active');
+        // }else{
+        //     let designText = prompt("Enter your design text: ");
+        //     if(designText){
+        //         // hide design options
+        //         document.querySelector('.option.design').classList.add('hidden');
+        //         document.querySelector('.option.design').classList.remove('active');
+        //         document.querySelector('.option.printing').classList.add('d-none');
+        //         TShirtDetails.designText = designText;
+        //         // show preview options
+        //         document.querySelectorAll(".option").forEach((option)=>{
+        //             option.classList.add('d-none');
+        //         })
+        //         loadTshirtPreview("needlework");
+        //     }
+        // }
     });
 });
 
@@ -334,8 +371,8 @@ function loadTshirtPreview(method){
         // imagine needlework preview using ai
         var LogoName = TShirtDetails.designText;
         let aiPrompt = `
-        A complete T-shirt design showing embroidery of the text "${LogoName}".
-        and i want the embroidery to be in the upper right corner of the t-shirt so that it is on the chest of the person wearing it.
+        A complete T-shirt design showing embroidery of the text "${LogoName}" on the ${TShirtDetails.side} side of the t-shirt.
+        and i want the embroidery to be in the upper right corner of the t-shirt of the person wearing it.
         and the Tshirt color is ${TShirtDetails.color},
         style is ${TShirtDetails.style} with a profesional person wearing it.
         `;
@@ -378,8 +415,30 @@ function loadTshirtPreview(method){
             TShirtDetails.printingImg = data.secure_url;
             document.querySelector('.tshirtPreview img#tshirtImage').src = `../../sources/tshirt_${TShirtDetails.side}Img_mockup.png`;
             document.querySelector('.tshirtPreview img.designImage').src = TShirtDetails.printingImg;
-            TShirtDetails.side == "front" ? document.querySelector('.tshirtPreview img.designImage').style.top = "50%" : document.querySelector('.tshirtPreview img.designImage').style.top = "60%";
-            TShirtDetails.side == "front" ? document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "60px" : document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "90px";
+            if(TShirtDetails.side == "front"){
+                if(TShirtDetails.position == "upperLeft"){
+                    document.querySelector('.tshirtPreview img.designImage').style.top = "30%";
+                    document.querySelector('.tshirtPreview img.designImage').style.left = "65%";
+                    document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "50px"
+                }else if(TShirtDetails.position == "upperRight"){
+                    document.querySelector('.tshirtPreview img.designImage').style.top = "35%";
+                    document.querySelector('.tshirtPreview img.designImage').style.left = "75%";
+                    document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "50px"
+                }else if(TShirtDetails.position == "upperMiddle"){
+                    document.querySelector('.tshirtPreview img.designImage').style.top = "30%";
+                    document.querySelector('.tshirtPreview img.designImage').style.left = "50%";
+                    document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "70px"
+                }else if(TShirtDetails.position == "center"){
+                    document.querySelector('.tshirtPreview img.designImage').style.top = "40%";
+                    document.querySelector('.tshirtPreview img.designImage').style.left = "50%";
+                    document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "100px"
+                }else{
+                    window.location.reload();
+                }
+            }else if(TShirtDetails.side == "back"){
+                document.querySelector('.tshirtPreview img.designImage').style.top = "50%";
+                document.querySelector('.tshirtPreview img.designImage').style.maxWidth = "90px";
+            }
             document.querySelector('.tshirtPreview img.designImage').classList.remove('d-none');
             document.querySelector('.option.preview').classList.remove('d-none');
             document.querySelector(".generating-Tshirt-loading").classList.add("d-none");
@@ -413,6 +472,7 @@ function loadTshirtPreview(method){
                 document.querySelector('.tshirtPreview img#designFrontImage').src = TShirtDetails.printingFrontImg;
                 document.querySelector('.tshirtPreview img#designBackImage').src = TShirtDetails.printingBackImg;
                 document.querySelector('.tshirtPreview img#designFrontImage').classList.remove('d-none');
+                document.querySelector('.tshirtPreview img#designFrontImage').classList.add(TShirtDetails.position);
                 document.querySelector('.tshirtPreview img#designBackImage').classList.remove('d-none');
                 document.querySelector('.tshirtPreview img#tshirtImage').src = `../../sources/back-front.jpg`;
                 document.querySelector('.option.preview').classList.remove('d-none');
@@ -443,9 +503,9 @@ document.querySelector("#tshirt-summary").addEventListener("click",async(e)=>{
         }
     });
     // calucate tshirt price
-    TShirtDetails.material == "High Quality" ? price += highQualitFees : price += lowQualityFees;
+    TShirtDetails.material == "High" ? price += highQualitFees : price += lowQualityFees;
     TShirtDetails.printingBackImg && TShirtDetails.printingFrontImg ? price += parseInt(printingFees)*2 :
-    TShirtDetails.printingImg || TShirtDetails.printingBackImg || TShirtDetails.printingFrontImg ? price += printingFees : price+= parseInt(printingFees)*2;
+    TShirtDetails.printingImg || TShirtDetails.printingBackImg || TShirtDetails.printingFrontImg ? price += printingFees : price+= parseInt(printingFees);
     document.getElementById("summaryPrice").innerText = + price.toString() + "EGP";
     summaryContainer.classList.toggle("d-none");
     document.querySelector('.option.preview').classList.add('d-none');
@@ -471,12 +531,16 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
         productId: "custom-tshirt",
         quantity:TShirtDetails.quanatity,
         size:TShirtDetails.size,
+        sizeType:TShirtDetails.sizeType,
         material:TShirtDetails.material,
         style:TShirtDetails.style,
         color:TShirtDetails.color,
         side:TShirtDetails.side,
+        position:TShirtDetails.position,
         designText:TShirtDetails.designText,
         printingImg:TShirtDetails.printingImg,
+        printingFrontImg:TShirtDetails.printingFrontImg,
+        printingBackImg:TShirtDetails.printingBackImg,
         printingImgSide:TShirtDetails.printingImgSide,
     };
     if(getCookie('userId') && !getCookie("emailToVirify")){
@@ -517,7 +581,7 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
     // window.location.href = "../../";
 })
 
-import { setCookie, getCookie, eraseCookie ,appendAlert } from './main.js';
+import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/main.js';
 
 
 
@@ -539,5 +603,3 @@ import { setCookie, getCookie, eraseCookie ,appendAlert } from './main.js';
 //     const data = await resp.json();
 //     console.log(data);
 // })()
-
-
