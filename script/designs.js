@@ -1,4 +1,4 @@
-import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from '../../script/app.js';
+import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from './app.js';
 
 window.addEventListener('DOMContentLoaded', () => {
     const welcomeMessage = document.querySelector('.welcome p');
@@ -581,7 +581,7 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
     // window.location.href = "../../";
 })
 
-import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/main.js';
+import { setCookie, getCookie, eraseCookie ,appendAlert } from './main.js';
 
 
 
@@ -602,4 +602,5 @@ import { setCookie, getCookie, eraseCookie ,appendAlert } from '../../script/mai
     
 //     const data = await resp.json();
 //     console.log(data);
+
 // })()
