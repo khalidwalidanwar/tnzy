@@ -358,7 +358,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 .container .optionsContainer .optionOptions .optionOption.selected {
-  border: 2px solid var(--maincolor);
+  border: 1px dashed var(--maincolor);
 }
 .container .optionsContainer .optionOptions .optionOption p {
   margin-top: 5px;
