@@ -70,7 +70,7 @@ window.addEventListener("load", async()=>{
                             });
                         }
                     });
-                    addressList.appendChild(addressItem);
+                    addressList.prepend(addressItem);
                 });
             }else{
                 addressList.innerHTML = '<p>No addresses yet.</p>';
@@ -148,7 +148,6 @@ window.addEventListener("load", async()=>{
                                         </div>
                                         `;
                                         orderItems.appendChild(itemDiv);
-                                        console.log("customized product found");
                                     }
                                 });
                             }
@@ -171,7 +170,7 @@ window.addEventListener("load", async()=>{
                                     `;
                                     orderItems.appendChild(itemDiv);
                                 } else {
-                                    console.log("No such product document!");
+                                    console.error("No such product document!");
                                 }
                                 if(Object.values(order.products).indexOf(item) === Object.values(order.products).length - 1) {
                                     // total products price
@@ -253,7 +252,7 @@ window.addEventListener("load", async()=>{
                             e.target.classList.contains("orderPreview")?orderPreview.style.display = 'none':"";
                         });
                     });
-                    orderListContainer.appendChild(orderItem);
+                    orderListContainer.prepend(orderItem);
                 });
             }else{
                 document.querySelector(".orders .noOrders").style.display='block';
@@ -338,7 +337,7 @@ document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
                                         <button class="delete-address btn btn-danger">Delete</button>
                                     </div>
                                 `;
-                                document.querySelector(".address-list").appendChild(addressItem);
+                                document.querySelector(".address-list").prepend(addressItem);
                                 appendAlert("Address added successfully!","success");
                                 setTimeout(() => {
                                     window.location.reload();
@@ -358,7 +357,7 @@ document.querySelector(".prompt .submit").addEventListener("click",async(e)=>{
                                         <button class="delete-address btn btn-danger">Delete</button>
                                     </div>
                                 `;
-                                document.querySelector(".address-list").appendChild(addressItem);
+                                document.querySelector(".address-list").prepend(addressItem);
                                 closePrompt();
                                 appendAlert("Address added successfully!","success");
                                 setTimeout(() => {

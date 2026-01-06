@@ -167,7 +167,7 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                     // end load images container
                     document.querySelector(".productPreview .productTitle").innerText = data.title;
                     document.querySelector(".productPreview .productDescription").innerText = data.description;
-                    document.querySelector(".productPreview .productPrice").setAttribute("data-lastPrice",data.oldPrice);
+                    document.querySelector(".productPreview .productPrice oldPrice").innerText = data.oldPrice?data.oldPrice+" EGP":"";
                     document.querySelector(".productPreview .productPrice span").innerText = data.newPrice;
                     document.querySelector(".productPreview .qtyInput").value = 1;
                     const avaliableSizes = data.avaliableSizes || [""];
@@ -197,7 +197,9 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                         if(window.localStorage.cart && window.localStorage.cart.length > 0){
                             zcart = JSON.parse(window.localStorage.cart);
                             let found = Object.values(zcart).find(
-                            item => item.productId == productId &&  item.size == document.querySelector(".productPreview select").value
+                            item => item.productId == productId 
+                            &&  item.size == document.querySelector(".productPreview select").value
+                            && item.sizeType == (document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular")
                             );
                             if (found) {
                                 found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
@@ -206,7 +208,12 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                                 appendAlert("Product added to cart successfully!","success");
                                 // window.location.href = '../orderConfirmation/cart.html';
                             } else {
-                                var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
+                                var newProduct = {
+                                    productId: productId, 
+                                    quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
+                                    size:document.querySelector(".productPreview select").value,
+                                    sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
+                                }
                                 zcart[Object.keys(zcart).length] = newProduct;
                                 window.localStorage.cart = JSON.stringify(zcart);
                                 e.target.removeAttribute("disabled");
@@ -220,6 +227,7 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                                     productId: productId,
                                     quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
                                     size:document.querySelector(".productPreview select").value,
+                                    sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
                                 }
                             };
                             window.localStorage.cart = JSON.stringify(zcart);
@@ -259,7 +267,7 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                 // end load images container
                 document.querySelector(".productPreview .productTitle").innerText = data.title;
                 document.querySelector(".productPreview .productDescription").innerText = data.description;
-                document.querySelector(".productPreview .productPrice").setAttribute("data-lastPrice",data.oldPrice);
+                document.querySelector(".productPreview .productPrice oldPrice").innerText = data.oldPrice?data.oldPrice+" EGP":"";
                 document.querySelector(".productPreview .productPrice span").innerText = data.newPrice;
                 document.querySelector(".productPreview .qtyInput").value = 1;
                 const avaliableSizes = data.avaliableSizes || [""];
@@ -289,7 +297,9 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                     if(window.localStorage.cart && window.localStorage.cart.length > 0){
                         zcart = JSON.parse(window.localStorage.cart);
                         let found = Object.values(zcart).find(
-                        item => item.productId == productId &&  item.size == document.querySelector(".productPreview select").value
+                        item => item.productId == productId 
+                        &&  item.size == document.querySelector(".productPreview select").value
+                        && item.sizeType == (document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular")
                         );
                         if (found) {
                             found.quantity +=parseInt(document.querySelector(".productPreview .qtyInput").value);
@@ -297,7 +307,12 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                             e.target.removeAttribute("disabled");
                             appendAlert("Product added to cart successfully!","success");
                         } else {
-                            var newProduct = {productId: productId, quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),size:document.querySelector(".productPreview select").value}
+                            var newProduct = {
+                                productId: productId, 
+                                quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
+                                size:document.querySelector(".productPreview select").value,
+                                sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
+                            }
                             zcart[Object.keys(zcart).length] = newProduct;
                             window.localStorage.cart = JSON.stringify(zcart);
                             e.target.removeAttribute("disabled");
@@ -310,9 +325,11 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                                 productId: productId,
                                 quantity:parseInt(document.querySelector(".productPreview .qtyInput").value),
                                 size:document.querySelector(".productPreview select").value,
+                                sizeType: document.querySelector(".productPreview .previewCard .regularOversize input").checked?"oversize":"regular",
                             }
                         };
                         window.localStorage.cart = JSON.stringify(zcart);
+                        e.target.removeAttribute("disabled");
                         appendAlert("Product added to cart successfully!","success");
                     }
                     document.querySelector(".productPreview .closeBtn").click();
@@ -327,13 +344,15 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
             
             container.appendChild(card);
         });
-        document.querySelector(".productPreview .closeBtn").addEventListener("click",()=>{
-            document.querySelector(".productPreview .productImage img").src = '';
-            document.querySelector(".productPreview .productTitle").innerText ='';
-            document.querySelector(".productPreview .productDescription").innerText = '';
-            document.querySelector(".productPreview .productPrice span").innerText = '';
-            document.querySelector(".productPreview .qtyInput").value = 1;
-            document.querySelector(".productPreview").classList.add("d-none");
+        document.querySelector(".productPreview").addEventListener("click",(e)=>{
+            if(e.target.classList.contains("closeBtn") || e.target.classList.contains("fa-solid fa-x")  || e.target.classList.contains("productPreview")){
+                document.querySelector(".productPreview .productImage img").src = '';
+                document.querySelector(".productPreview .productTitle").innerText ='';
+                document.querySelector(".productPreview .productDescription").innerText = '';
+                document.querySelector(".productPreview .productPrice span").innerText = '';
+                document.querySelector(".productPreview .qtyInput").value = 1;
+                document.querySelector(".productPreview").classList.add("d-none");
+            }
         })
         document.querySelectorAll(' .favorite').forEach(icon => {
             icon.addEventListener('click', async() => {

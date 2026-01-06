@@ -184,7 +184,7 @@ window.addEventListener("load",async()=>{
                     totalPrice: order.totalPrice,
                     paymentMethod: order.paymentMethod,
                 };
-                const adminParams = {email: "zerot2026@gmail.com",orderId: order.orderId,time: order.createdAt,totalOfProducts: order.totalOfProducts,deliveryFees: order.deliveryFees,discount: order.discount,totalPrice: order.totalPrice,paymentMethod: order.paymentMethod,};
+                const adminParams = {email: "teenzy2525@gmail.com",orderId: order.orderId,time: order.createdAt,totalOfProducts: order.totalOfProducts,deliveryFees: order.deliveryFees,discount: order.discount,totalPrice: order.totalPrice,paymentMethod: order.paymentMethod,};
                 try {
                 const newOrderRef = doc(collection(db, "orders"));
                 await setDoc(newOrderRef, order); 
@@ -459,6 +459,7 @@ async function loadProductsTotal(product){
                     // load product info
                     const productElement = document.createElement("div");
                     productElement.classList.add("product");
+                    const capitalized = item.sizeType.charAt(0).toUpperCase() + item.sizeType.slice(1);
                     productElement.innerHTML=`
                     <div class="details">
                         <div class="product-title">
@@ -466,7 +467,7 @@ async function loadProductsTotal(product){
                         </div>
                         <div class="product-details">
                         <p class="product-size">Style: ${item.style || "Hoodie"}</p>
-                        <p class="product-size">Size: ${item.size || "S"}</p>
+                        <p class="product-size">Size: ${item.size || "M"} ${' ('+capitalized+")"}</p>
                         <p class="product-size">Color: <span>${item.color}</span></p>
                         <p class="product-size">Printing: <span>${item.side=="back-front"?"Front & Back":item.side}</span></p>
                         ${item.designText ? `<p class="product-size">Design Text: <span>${item.designText}</span></p>` : ""}
@@ -534,13 +535,14 @@ async function loadProductsTotal(product){
                 totalOfProducts += productTotalPrice;
                 const productElement = document.createElement("div");
                 productElement.classList.add("product");
+                const capitalized = product.sizeType.charAt(0).toUpperCase() + product.sizeType.slice(1);
                 productElement.innerHTML=`
                 <div class="details">
                     <div class="product-title">
                     <p>${item.title}</p>
                     </div>
                     <div class="product-details">
-                    <p class="product-size">Size: ${product.size || "S"}</p>
+                    <p class="product-size">Size: ${product.size || "M"} ${' ('+capitalized+")"}</p>
                     <p class="product-price" class="price">Price: <span>${item.newPrice}</span> EGP</p>
                     <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${product.quantity}" min="1"> </p>
                     </div>

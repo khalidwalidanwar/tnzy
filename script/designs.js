@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
     welcomeMessage.innerHTML = '';
     // welcomeMessage.innerHTML = 'Welcome to TNZY customised world.';
     // write this messege letter by letter
-    const message = 'Welcome to ZERO customised world.';
+    const message = 'Welcome to TNZY customised world.';
     let index = 0;
     const interval = setInterval(() => {
         welcomeMessage.innerHTML += message[index];
@@ -555,10 +555,10 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
             } else {
                 zcart[Object.keys(zcart).length] = newProduct;
                 window.localStorage.cart = JSON.stringify(zcart);
-                appendAlert("Product added to cart successfully!","success");
+                appendAlert("Product added to cart successfully! <br> Redirecting to cart.....","success");
                 setTimeout(() => {
                     window.location.href = '../orderConfirmation/cart.html';
-                }, 5000);
+                }, 3000);
             }
             
         }else{
@@ -566,10 +566,10 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
                 0:newProduct
             };
             window.localStorage.cart = JSON.stringify(zcart);
-            appendAlert("Product added to cart successfully!","success");
+            appendAlert("Product added to cart successfully! <br> Redirecting to cart.....","success");
             setTimeout(() => {
                 window.location.href = '../orderConfirmation/cart.html';
-            }, 5000);
+            }, 3000);
         }
     }else{
         appendAlert('please log in first to add to cart.',"warning");
@@ -602,5 +602,4 @@ import { setCookie, getCookie, eraseCookie ,appendAlert } from './main.js';
     
 //     const data = await resp.json();
 //     console.log(data);
-
 // })()
