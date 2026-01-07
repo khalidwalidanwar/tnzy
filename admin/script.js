@@ -463,9 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <thead>
                         <tr>
                             <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Customer Name</th>
-                            <th>Total</th>
+                            <th class="disappear">Date</th>
+                            <th class="disappear">Customer Name</th>
+                            <th class="disappear">Total</th>
                             <th>Status</th>
                             <th>Action</th>
                             <th>Details</th>
@@ -492,9 +492,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ordersPage.querySelector('tbody').innerHTML += `
                 <tr data-order-id="${docu.id}">
                     <td>${order.orderId.split('_')[0]}<br>${order.orderId.split('_')[1]}</td>
-                    <td>${formattedDate}</td>
-                    <td>${customerName}</td>
-                    <td>${order.totalPrice} EGP</td>
+                    <td class="disappear">${formattedDate}</td>
+                    <td class="disappear">${customerName}</td>
+                    <td class="disappear">${order.totalPrice} EGP</td>
                     <td><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
                     ${order.status === 'pending' ? `<td><button class="action-btn process-btn">Prepare Order</button></td>` : ``}
                     ${order.status === 'preparing' ? `<td><button class="action-btn ship-btn">Ship Order</button></td>` : ``}
@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ordersPage.querySelectorAll('.view-btn').forEach((button)=>{
                     button.addEventListener('click', (e) => {
                         var orderId = e.target.closest("tr").getAttribute("data-order-id");
-                        alert("Order Details for Order ID: "+orderId+"\n\n(In a real app, this would open a modal with detailed order info.)","info");
+                        showOrderDetailsFor(orderId);
                     });
                 });
                 // Add event listeners for the dynamically created buttons
@@ -569,6 +569,172 @@ document.addEventListener('DOMContentLoaded', () => {
                 // In a real app, this would trigger an API call and refresh the row/table.
             });
         });
+
+        // showOrderDetailsFor
+        const showOrderDetailsFor = async(orderId)=>{
+            const ref = await getDoc(doc(db,"orders",orderId))
+            const order = ref.data();
+            var orderMessage=`OrderId: *${order.orderId}*\nProducts:-\n`;
+            var numbering =1;
+            const orderPreview = document.querySelector(".orderPreview");
+            orderPreview.classList.remove("d-none")
+            const orderDetailsContent = document.querySelector(".orderPreview .orderDetailsContent");
+            orderDetailsContent.innerHTML = '';
+            // order location
+            const locationDiv = document.createElement("div");
+            locationDiv.classList.add("order-location-detail");
+            locationDiv.innerHTML = `
+            <h4>Shipping information:-</h4>
+            <p>Address: ${order.address.address}, ${order.address.city}, ${order.address.country}</p>
+            <p>Phone: ${order.address.phone}</p>
+            `;
+            orderDetailsContent.appendChild(locationDiv);
+            orderDetailsContent.innerHTML += '<div class="order-items"></div>';
+            const orderItems = document.querySelector(".orderPreview .orderDetailsContent .order-items");
+            // order items
+            Object.values(order.products).forEach(async (item) => {
+                if(item.productId == "custom-tshirt"){
+                    // Customized product
+                    var highQualitFees;
+                    var lowQualityFees;
+                    var printingFees;
+                    // get product price from firebase based on TShirtDetails
+                    const snap = await getDocs(collection(db, "products"));
+                    snap.forEach(async (doc) => {
+                        if(doc.id == "customized-product"){
+                            const productData = doc.data();
+                            highQualitFees = productData.high;
+                            lowQualityFees = productData.low;
+                            printingFees = productData.printing;
+                            // calc. price
+                            let price = 0;
+                            item.material == "High" ? price += highQualitFees : price += lowQualityFees;
+                            item.printingBackImg && item.printingFrontImg ? price += parseInt(printingFees)*2 :
+                            item.printingImg || item.printingBackImg || item.printingFrontImg ? price += printingFees : price+= parseInt(printingFees);
+                            const productTotalPrice = price * item.quantity;
+                            const itemDiv = document.createElement("div");
+                            itemDiv.classList.add("order-item-detail");
+                            itemDiv.classList.add("card");
+                            orderMessage+=`[${numbering}] Custom T-shirt: \n  QTY: *${item.quantity} pcs*,\n  Size: *${item.size} (${item.sizeType})*,\n  Material: *${item.material}*,\n  Color: *${item.color}*\n  printingSide: *${item.side}*\n  ${item.side=="back-front"?`FrontImage: ${item.printingFrontImg}\nBackImage: ${item.printingBackImg}\n`:`printingImage: ${item.printingImg}\n`}${item.side!="back"?`  Frontal Img Position: *${item.position}*`:""}\n\n`;
+                            numbering++;
+                            itemDiv.innerHTML = `
+                            <img src="../../sources/customTshirt.png" class='card-img-top' alt="Custom T-shirt" width="100">
+                            <div class="card-body item-info">
+                            <h5 class='card-title'>Custom T.</h5>
+                            <p>{ ${item.size} , ${item.color} ${item.style} }</p>
+                            <p>Quantity: ${item.quantity}</p>
+                            <p class='last'>Price: ${price} EGP</p>
+                            <p class='totalPrice'><strong>Total</strong>: ${productTotalPrice} EGP</p>
+                            </div>
+                            `;
+                            orderItems.appendChild(itemDiv);
+                        }
+                    });
+                }
+                getDoc(doc(db, "products", item.productId)).then(async(productSnap) => {
+                    if (productSnap.exists()) {
+                        const productData = productSnap.data();
+                        const itemDiv = document.createElement("div");
+                        itemDiv.classList.add("order-item-detail");
+                        itemDiv.classList.add("card");
+                        orderMessage +=`[${numbering}] *${productData.title}*: QTY: *${item.quantity} pcs*, Size: *${item.size} (${item.sizeType})*\n\n`;
+                        numbering++;
+                        itemDiv.innerHTML = `
+                            <img src="${productData.imgUrl[0]}" style='max-width: 70px;margin: auto;' class='card-img-top' alt="${productData.title}" width="100">
+                            <div class="card-body item-info">
+                                <h5 class='card-title'>${productData.title}</h5>
+                                <p>Quantity: ${item.quantity}</p>
+                                <p>Size: ${item.size}</p>
+                                <p class='last'>Price: ${productData.newPrice} EGP</p>
+                                <p>.....</p>
+                                <p class='totalPrice'><strong>Total</strong>: ${productData.newPrice * item.quantity} EGP</p>
+                            </div>
+                        `;
+                        orderItems.appendChild(itemDiv);
+                    } else {
+                        console.error("No such product document!");
+                    }
+                    if(Object.values(order.products).indexOf(item) === Object.values(order.products).length - 1) {
+                        // total products price
+                        const productsTotalDiv = document.createElement("div");
+                        productsTotalDiv.classList.add("order-products-total");
+                        productsTotalDiv.innerHTML = `
+                            <h4>Total products: ${order.totalOfProducts} EGP</h4><hr>
+                        `;
+                        orderDetailsContent.appendChild(productsTotalDiv);
+                        // shipping and discount info
+                        const shippingDiv = document.createElement("div");
+                        shippingDiv.classList.add("order-shipping-detail");
+                        shippingDiv.innerHTML = `
+                            <h4>Shipping: ${order.deliveryFees} EGP</h4>
+                            ${order.discount ? `<h4>Discount: -${order.discount} EGP</h4>` : ''}
+                        `;
+                        orderDetailsContent.appendChild(shippingDiv);
+                        // total price
+                        const totalDiv = document.createElement("div");
+                        totalDiv.classList.add("order-total-detail");
+                        totalDiv.innerHTML = `
+                            <hr><h4>Total: ${order.totalPrice} EGP</h4>
+                            <a class="btn btn-outline-success" target='_blanck' href="https://wa.me/201027467022?text=${encodeURIComponent(orderMessage)}">💨</a>
+                        `;
+                        orderDetailsContent.appendChild(totalDiv);
+                        // canceling order if order status is pending
+                        if(order.status === 'pending') {
+                            const cancelBtn = document.createElement("button");
+                            cancelBtn.classList.add("d-none", "btn-danger", "cancel-order");
+                            cancelBtn.textContent = "Cancel Order";
+                            cancelBtn.addEventListener("click", (e) => {
+                                e.target.setAttribute("disabled", "");
+                                if(confirm("Are you sure you want to cancel this order?")) {
+                                    updateDoc(doc(db, "orders", orderSnap.id), {
+                                        status: 'cancelled'
+                                    }).then(() => {
+                                        appendAlert("Order cancelled successfully.","success");
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 5000);
+                                    });
+                                }
+                            });
+                            orderDetailsContent.appendChild(cancelBtn);
+                        }else if(order.status === 'cancelled'){
+                            const cancelInfo = document.createElement("p");
+                            cancelInfo.style.color = 'red';
+                            cancelInfo.style.fontWeight = 'bold';
+                            cancelInfo.textContent = "Order has been cancelled";
+                            orderDetailsContent.appendChild(cancelInfo);
+                        }else if(order.status === 'delivered'){
+                            const cancelInfo = document.createElement("p");
+                            cancelInfo.style.color = 'green';
+                            cancelInfo.style.fontWeight = 'bold';
+                            cancelInfo.textContent = "Delivered";
+                            orderDetailsContent.appendChild(cancelInfo);
+                        }else if(order.status === 'delivering'){
+                            const cancelInfo = document.createElement("p");
+                            cancelInfo.style.color = 'yellowgreen';
+                            cancelInfo.style.fontWeight = 'bold';
+                            cancelInfo.textContent = "Delivering";
+                            orderDetailsContent.appendChild(cancelInfo);
+                        }else if(order.status === 'preparing'){
+                            const cancelInfo = document.createElement("p");
+                            cancelInfo.style.color = 'darkgreen';
+                            cancelInfo.style.fontWeight = 'bold';
+                            cancelInfo.textContent = "Your order is being prepared.....";
+                            orderDetailsContent.appendChild(cancelInfo);
+                        }
+                        orderPreview.style.display = 'flex';
+                    }
+                    orderPreview.style.display = 'flex';
+                })
+            });
+            
+            document.querySelector(".orderPreview .controle").addEventListener("click",(e)=>{
+                orderPreview.style.display = 'none';
+            });
+            document.querySelector(".orderPreview").addEventListener("click",(e)=>{
+                e.target.classList.contains("orderPreview")?orderPreview.style.display = 'none':"";
+            });
+        }
     };
 
     // Main navigation switching logic
