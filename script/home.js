@@ -393,8 +393,8 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
 };
 
 // Load products
-loadProducts('tshirt','plain','.topCollections .product-grid',15);
-loadProducts('tshirt','trendy','.summerCollections .product-grid',15);
+loadProducts('tshirt','plain','.topCollections .product-grid',100);
+loadProducts('tshirt','trendy','.summerCollections .product-grid',100);
 
 window.addEventListener('scroll', () => {
     const productGrids = document.querySelectorAll('.collection .product-grid');
@@ -548,4 +548,5 @@ const loadReviews = async () => {
 
 
 import {getCookie, setCookie, eraseCookie,appendAlert} from './main.js';
+
 // eraseCookie("user")
