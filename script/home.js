@@ -99,7 +99,7 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
     container.innerHTML = '<p>Loading products...</p>'; // Show loading message
     let q;
     if(category && subname){
-        q = query(collection(db, "products"), where("category", "==", category), where("subname", "==", subname), limit(4));
+        q = query(collection(db, "products"), where("category", "==", category), where("subname", "==", subname), limit(zlimit));
     }else if(category){
         q = query(collection(db, "products"), where("category", "==", category), limit(zlimit));
     }
@@ -548,5 +548,4 @@ const loadReviews = async () => {
 
 
 import {getCookie, setCookie, eraseCookie,appendAlert} from './main.js';
-
 // eraseCookie("user")
