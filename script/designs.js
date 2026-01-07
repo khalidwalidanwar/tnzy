@@ -1,4 +1,4 @@
-import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc} from './app.js';
+import {app, db, collection, getDocs, addDoc, query,limit,where ,deleteDoc,doc,updateDoc,getDoc,setDoc} from './app.js';
 
 window.addEventListener('DOMContentLoaded', () => {
     const welcomeMessage = document.querySelector('.welcome p');
@@ -582,8 +582,6 @@ document.querySelector("#proceedToCheckout").addEventListener("click",(e)=>{
 })
 
 import { setCookie, getCookie, eraseCookie ,appendAlert } from './main.js';
-
-
 
 
 

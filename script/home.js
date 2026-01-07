@@ -342,10 +342,10 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                 }
             })
             
-            container.appendChild(card);
+            container.prepend(card);
         });
         document.querySelector(".productPreview").addEventListener("click",(e)=>{
-            if(e.target.classList.contains("closeBtn") || e.target.classList.contains("fa-solid fa-x")  || e.target.classList.contains("productPreview")){
+            if(e.target.classList.contains("closeBtn") || e.target.classList.contains("fa-x")  || e.target.classList.contains("productPreview")){
                 document.querySelector(".productPreview .productImage img").src = '';
                 document.querySelector(".productPreview .productTitle").innerText ='';
                 document.querySelector(".productPreview .productDescription").innerText = '';

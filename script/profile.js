@@ -93,7 +93,7 @@ window.addEventListener("load", async()=>{
                         <div class="orderDetails">
                             <p class="order-id">Order ID: ${order.orderId}</p>
                             <p class="order-date">Date: ${new Date(order.createdAt).toLocaleDateString()}</p>
-                            <p class="order-status">Status: ${order.status}</p>
+                            <p class="order-status ">Status: <span class='${order.status}'>${order.status}</span></p>
                             <p class="order-total">Total: ${order.totalPrice} EGP</p>
                         </div>
                         <button class="view-details btn btn-info">View Details</button>
