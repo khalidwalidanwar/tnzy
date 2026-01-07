@@ -754,6 +754,8 @@ section.analyse .container .reviews button:hover {
   padding: 20px;
   width: 300px;
   position: relative;
+  max-height: 95%;
+  overflow-y: scroll;
 }
 .productPreview .previewCard .productImagesContainer .productImage {
   width: 100%;
@@ -924,6 +926,9 @@ section.analyse .container .reviews button:hover {
 @media only screen and (max-width: 500px) {
   .container .catalog .product-grid .product-info {
     padding: 15px 10px !important;
+  }
+  .product-grid {
+    margin: 0 10px !important;
   }
   .product-grid .card {
     max-height: 315px !important;

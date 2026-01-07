@@ -466,6 +466,22 @@ hr {
   margin: 0;
   font-size: 14px;
 }
+.container.main .orders .order-list .order-item .orderDetails .order-status span {
+  color: var(--maincolor);
+  font-weight: bold;
+}
+.container.main .orders .order-list .order-item .orderDetails .order-status span.preparing {
+  color: rgb(105, 147, 255); /* accent with opacity */
+}
+.container.main .orders .order-list .order-item .orderDetails .order-status span.delivered {
+  color: rgb(33, 206, 153); /* A slightly darker success green */
+}
+.container.main .orders .order-list .order-item .orderDetails .order-status span.cancelled {
+  color: rgb(246, 78, 96); /* danger with opacity */
+}
+.container.main .orders .order-list .order-item .orderDetails .order-status span.pending {
+  color: rgb(255, 184, 34);
+}
 .container.main .orders .order-list .order-item .orderDetails .order-total {
   font-weight: bold;
 }
@@ -481,6 +497,7 @@ hr {
 @media (max-width: 400px) {
   .container.main .orders .order-list {
     padding: 0 !important;
+    max-height: unset;
   }
 }
 @media (max-width: 1070px) {

@@ -499,6 +499,8 @@ header {
   padding: 20px;
   width: 300px;
   position: relative;
+  max-height: 95%;
+  overflow-y: scroll;
 }
 .productPreview .previewCard .productImagesContainer .productImage {
   width: 100%;
