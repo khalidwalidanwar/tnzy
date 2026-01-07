@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             productsPage.querySelector('tbody').innerHTML += `
-            <tr>
+            <tr data-Id='${doc.id}'>
                 <td class="imgCon" ><img src="${product.imgUrl[0]}" alt="T-Shirt" class="product-thumb"></td>
                 <td class="productTitile" >${product.title}</td>
                 <td class="productCategory" >${product.category}</td>
@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label for="product-status">Status</label>
                             <input type="text" id="product-status">
                         </div>
-                        <button type="submit" class="primary-button save-btn">Save new Product</button>
-                        <button type="submit" class="success-button save-btn">Save edited Product</button>
+                        <button type="submit" class="primary-button save-new-btn">Save new Product</button>
+                        <button type="submit" class="success-button save-update-btn">Save edited Product</button>
                     </form>
                 </div>
             </div>
@@ -219,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // open edit poduct modal
         productsPage.querySelectorAll('.edit-btn').forEach((button, index) => {
-            button.addEventListener('click', async () => {
+            button.addEventListener('click', async (e) => {
+                document.querySelector('#product-form').setAttribute("data-id",e.target.parentElement.parentElement.getAttribute("data-id"))
                 document.querySelector('#product-form .primary-button').style.display = 'none';
                 document.querySelector('#product-form .success-button').style.display = 'block';
                 const productSnap = (await getDocs(collection(db, "products"))).docs[index];
@@ -228,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('product-subName').value = product.subname || '';
                 document.getElementById('product-desc').value = product.description || '';
                 document.getElementById('product-category').value = product.category || '';
+                document.getElementById('product-status').value = product.status || '';
                 document.getElementById('product-oldprice').value = product.oldPrice || 0;
                 document.getElementById('product-price').value = product.newPrice || 0;
                 let totalStock = 0;
@@ -246,8 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // update current product
-        document.querySelector('#product-form .success-button').addEventListener('click', async (e) => {
+        document.querySelector('#product-form .success-button.save-update-btn').addEventListener('click', async (e) => {
             e.preventDefault();
+            const productId = document.querySelector("#product-form").getAttribute("data-id");
             e.target.setAttribute("disabled","")
             // edit existing product in firebase db
             const editProduct = async (productId, title, subname, description, category, status, newPrice, oldPrice,imgUrl,avaliableSizes) => {
@@ -295,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "XL": sizeXL,
                 "2XL": size2XL
             };
-            const status = stock > 20 ? 'Sale' : stock > 0 ? 'New' : 'Sold Out';
+            const status = document.querySelector("#product-status").value;
             const imgUrl = [];
             const uploadImage = async (file) => {
                 const url = `https://api.cloudinary.com/v1_1/dfochp65f/image/upload`;
@@ -321,15 +324,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imageFiles.length > 0) {
                 finalImgUrls = await uploadImages(imageFiles);
             } else {
-                finalImgUrls =  (await getDocs(collection(db, "products"))).docs.find((d) => d.data().title === title).data().imgUrl;
+                const refref =  (await getDoc(doc(db, "products",productId)));
+                finalImgUrls =refref.data().imgUrl;
             }
-            const productId = (await getDocs(collection(db, "products"))).docs.find((d) => d.data().title === title).id;
             await editProduct(productId, title, subname, description, category, status, newPrice, oldPrice, finalImgUrls, avaliableSizes);
             modal.style.display = 'none';
             renderProductsPage(); // Refresh the products page to show the updated product
         })
         // add new product
-        document.querySelector('#product-form .primary-button').addEventListener('click', async (e) => {
+        document.querySelector('#product-form .primary-button.save-new-btn').addEventListener('click', async (e) => {
             e.preventDefault();
             // add new product to firebase db
             const addProduct = async (title, subname, description, category, status, newPrice, oldPrice,imgUrl,avaliableSizes) => {
