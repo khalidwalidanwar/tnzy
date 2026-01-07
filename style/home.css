@@ -498,6 +498,8 @@ section.collection .card.soldOutCard::after {
   font-weight: bold;
 }
 section.collection .card {
+  min-width: 150px;
+  max-width: 150px;
   max-height: 270px;
   width: 150px;
   background: white;
