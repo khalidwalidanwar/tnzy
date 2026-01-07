@@ -158,7 +158,7 @@ window.addEventListener("load", async()=>{
                                     itemDiv.classList.add("order-item-detail");
                                     itemDiv.classList.add("card");
                                     itemDiv.innerHTML = `
-                                        <img src="${productData.imgUrl[0]}" class='card-img-top' alt="${productData.title}" width="100">
+                                        <img src="${productData.imgUrl[0]}" class='card-img-top' style='max-width: 70px;margin: auto;' alt="${productData.title}" width="100">
                                         <div class="card-body item-info">
                                             <h5 class='card-title'>${productData.title}</h5>
                                             <p>Quantity: ${item.quantity}</p>
