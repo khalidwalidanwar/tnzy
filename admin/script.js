@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#product-form').setAttribute("data-id",e.target.parentElement.parentElement.getAttribute("data-id"))
                 document.querySelector('#product-form .primary-button').style.display = 'none';
                 document.querySelector('#product-form .success-button').style.display = 'block';
-                const productSnap = (await getDocs(collection(db, "products"))).docs[index];
+                const productSnap = await getDoc(doc(db, "products",e.target.parentElement.parentElement.getAttribute("data-id")));
                 const product = productSnap.data();
                 document.getElementById('product-name').value = product.title;
                 document.getElementById('product-subName').value = product.subname || '';
@@ -584,6 +584,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const locationDiv = document.createElement("div");
             locationDiv.classList.add("order-location-detail");
             locationDiv.innerHTML = `
+            <p>UserId: ${order.userId}</p>
+            <p>Date: ${order.createdAt} , Pay: ${order.paymentMethod}</p>
             <h4>Shipping information:-</h4>
             <p>Address: ${order.address.address}, ${order.address.city}, ${order.address.country}</p>
             <p>Phone: ${order.address.phone}</p>
@@ -621,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <img src="../../sources/customTshirt.png" class='card-img-top' alt="Custom T-shirt" width="100">
                             <div class="card-body item-info">
                             <h5 class='card-title'>Custom T.</h5>
-                            <p>{ ${item.size} , ${item.color} ${item.style} }</p>
+                            <p>{${item.material}, ${item.size} (${item.sizeType}) , ${item.color} , ${item.style} }</p>
                             <p>Quantity: ${item.quantity}</p>
                             <p class='last'>Price: ${price} EGP</p>
                             <p class='totalPrice'><strong>Total</strong>: ${productTotalPrice} EGP</p>
@@ -639,15 +641,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         itemDiv.classList.add("card");
                         orderMessage +=`[${numbering}] *${productData.title}*: QTY: *${item.quantity} pcs*, Size: *${item.size} (${item.sizeType})*\n\n`;
                         numbering++;
+                        const finalPrice = item.sizeType=="oversize"?productData.newPrice+50:productData.newPrice;
                         itemDiv.innerHTML = `
                             <img src="${productData.imgUrl[0]}" style='max-width: 70px;margin: auto;' class='card-img-top' alt="${productData.title}" width="100">
                             <div class="card-body item-info">
                                 <h5 class='card-title'>${productData.title}</h5>
                                 <p>Quantity: ${item.quantity}</p>
-                                <p>Size: ${item.size}</p>
-                                <p class='last'>Price: ${productData.newPrice} EGP</p>
+                                <p>Size: ${item.size} (${item.sizeType})</p>
+                                <p class='last'>Price: ${finalPrice} EGP</p>
                                 <p>.....</p>
-                                <p class='totalPrice'><strong>Total</strong>: ${productData.newPrice * item.quantity} EGP</p>
+                                <p class='totalPrice'><strong>Total</strong>: ${finalPrice * item.quantity} EGP</p>
                             </div>
                         `;
                         orderItems.appendChild(itemDiv);
