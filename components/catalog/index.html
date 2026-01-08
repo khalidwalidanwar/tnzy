@@ -83,7 +83,7 @@
           </div>
           <div class="regularOversize">
               <div class="regularSizes">
-                  <a href="https://res.cloudinary.com/dfochp65f/image/upload/v1767660480/jyod6bu4gtshgcoabgd1.jpg" target="_blank" rel="noopener noreferrer">
+                  <a href="../../regular.png" target="_blank" rel="noopener noreferrer">
                       <i class="fa-solid fa-ruler"></i>
                   </a>
               </div>
@@ -95,7 +95,7 @@
                   </label>
               </div>
               <div class="regularSizes">
-                  <a href="https://res.cloudinary.com/dfochp65f/image/upload/v1767660497/lqtjn1ktgd8f1ew1so50.jpg" target="_blank" rel="noopener noreferrer">
+                  <a href="../../oversize.png" target="_blank" rel="noopener noreferrer">
                       <i class="fa-solid fa-ruler"></i>
                   </a>
               </div>
@@ -421,6 +421,7 @@
             document.querySelector(".productPreview .productPrice span").innerText = '';
             document.querySelector(".productPreview .qtyInput").value = 1;
             document.querySelector(".productPreview").classList.add("d-none");
+            document.querySelector("input#checkNativeSwitch").checked = false;
           }
         })
         {// filter categories
@@ -496,7 +497,17 @@
         }
       })
     }
-
+document.querySelector("input#checkNativeSwitch").addEventListener("change",()=>{
+    var zPrice = document.querySelector(".productPreview .productPrice span");
+    var zOldPrice = document.querySelector(".productPreview .productPrice oldPrice");
+    if(document.querySelector("input#checkNativeSwitch").checked){
+        zPrice.innerText = parseInt(zPrice.innerText)+50;
+        zOldPrice.innerText = parseInt(zOldPrice.innerText)+50 +" EGP";
+    }else{
+        zPrice.innerText = parseInt(zPrice.innerText)-50;
+        zOldPrice.innerText = parseInt(zOldPrice.innerText)-50 +" EGP";
+    }
+})
     {// header
     const header =document.querySelector("header")
     const menuBar =document.querySelector("header .links .menuBar")
