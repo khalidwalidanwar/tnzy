@@ -133,6 +133,7 @@ window.addEventListener("load", async()=>{
                                         item.material == "High" ? price += highQualitFees : price += lowQualityFees;
                                         item.printingBackImg && item.printingFrontImg ? price += parseInt(printingFees)*2 :
                                         item.printingImg || item.printingBackImg || item.printingFrontImg ? price += printingFees : price+= parseInt(printingFees);
+                                        item.sizeType=="oversize"?price+=50:"";
                                         const productTotalPrice = price * item.quantity;
                                         const itemDiv = document.createElement("div");
                                         itemDiv.classList.add("order-item-detail");
@@ -141,7 +142,7 @@ window.addEventListener("load", async()=>{
                                         <img src="../../sources/customTshirt.png" class='card-img-top' alt="Custom T-shirt" width="100">
                                         <div class="card-body item-info">
                                         <h5 class='card-title'>Custom T.</h5>
-                                        <p>{ ${item.size} , ${item.color} ${item.style} }</p>
+                                        <p>{ ${item.size} (${item.sizeType}) , ${item.color} ${item.style} }</p>
                                         <p>Quantity: ${item.quantity}</p>
                                         <p class='last'>Price: ${price} EGP</p>
                                         <p class='totalPrice'><strong>Total</strong>: ${productTotalPrice} EGP</p>
@@ -157,15 +158,16 @@ window.addEventListener("load", async()=>{
                                     const itemDiv = document.createElement("div");
                                     itemDiv.classList.add("order-item-detail");
                                     itemDiv.classList.add("card");
+                                    const finalPrice = item.sizeType=="oversize"?parseInt(productData.newPrice+50):productData.newPrice;
                                     itemDiv.innerHTML = `
                                         <img src="${productData.imgUrl[0]}" class='card-img-top' style='max-width: 70px;margin: auto;' alt="${productData.title}" width="100">
                                         <div class="card-body item-info">
                                             <h5 class='card-title'>${productData.title}</h5>
                                             <p>Quantity: ${item.quantity}</p>
-                                            <p>Size: ${item.size}</p>
-                                            <p class='last'>Price: ${productData.newPrice} EGP</p>
+                                            <p>Size: ${item.size} (${item.sizeType})</p>
+                                            <p class='last'>Price: ${finalPrice} EGP</p>
                                             <p>.....</p>
-                                            <p class='totalPrice'><strong>Total</strong>: ${productData.newPrice * item.quantity} EGP</p>
+                                            <p class='totalPrice'><strong>Total</strong>: ${finalPrice * item.quantity} EGP</p>
                                         </div>
                                     `;
                                     orderItems.appendChild(itemDiv);

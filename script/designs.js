@@ -100,12 +100,12 @@ sizeOptions.forEach((size)=>{
         size.classList.add('selected');
         // update summary
         const summarySize = document.getElementById('summarySize');
-        summarySize.innerText = size.innerText;
+        document.querySelector(".form-check-input").checked?TShirtDetails.sizeType = "oversize": TShirtDetails.sizeType = "regular";
+        summarySize.innerText = size.innerText +` (${TShirtDetails.sizeType})`;
         setTimeout(() => {
             // show color options
             document.querySelector('.option.color').classList.remove('d-none');
             // hide size options
-            document.querySelector(".form-check-input").checked?TShirtDetails.sizeType = "oversize": TShirtDetails.sizeType = "regular";
             TShirtDetails.size = size.innerText;
             document.querySelector('.option.size').classList.add('hidden');
             document.querySelector('.option.size').classList.remove('active');
@@ -506,13 +506,14 @@ document.querySelector("#tshirt-summary").addEventListener("click",async(e)=>{
     TShirtDetails.material == "High" ? price += highQualitFees : price += lowQualityFees;
     TShirtDetails.printingBackImg && TShirtDetails.printingFrontImg ? price += parseInt(printingFees)*2 :
     TShirtDetails.printingImg || TShirtDetails.printingBackImg || TShirtDetails.printingFrontImg ? price += printingFees : price+= parseInt(printingFees);
-    document.getElementById("summaryPrice").innerText = + price.toString() + "EGP";
+    TShirtDetails.sizeType=="oversize"?price+=50:"";
+    document.getElementById("summaryPrice").innerText = + price.toString() + " EGP";
     summaryContainer.classList.toggle("d-none");
     document.querySelector('.option.preview').classList.add('d-none');
 })
 document.querySelector(".summaryQyantity").addEventListener("change",(e)=>{
-    if(e.target.value > 200){
-        e.target.value = 200;
+    if(e.target.value > 2000){
+        e.target.value = 2000;
     }else if(e.target.value < 1){
         e.target.value = 1;
     }

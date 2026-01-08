@@ -352,6 +352,7 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
                 document.querySelector(".productPreview .productPrice span").innerText = '';
                 document.querySelector(".productPreview .qtyInput").value = 1;
                 document.querySelector(".productPreview").classList.add("d-none");
+                document.querySelector("input#checkNativeSwitch").checked = false;
             }
         })
         document.querySelectorAll(' .favorite').forEach(icon => {
@@ -395,6 +396,19 @@ const loadProducts = async (category, subname, containerSelector,zlimit) => {
 // Load products
 loadProducts('tshirt','plain','.topCollections .product-grid',100);
 loadProducts('tshirt','trendy','.summerCollections .product-grid',100);
+
+document.querySelector("input#checkNativeSwitch").addEventListener("change",()=>{
+    var zPrice = document.querySelector(".productPreview .productPrice span");
+    var zOldPrice = document.querySelector(".productPreview .productPrice oldPrice");
+    if(document.querySelector("input#checkNativeSwitch").checked){
+        zPrice.innerText = parseInt(zPrice.innerText)+50;
+        zOldPrice.innerText = parseInt(zOldPrice.innerText)+50 +" EGP";
+    }else{
+        zPrice.innerText = parseInt(zPrice.innerText)-50;
+        zOldPrice.innerText = parseInt(zOldPrice.innerText)-50 +" EGP";
+    }
+})
+
 
 window.addEventListener('scroll', () => {
     const productGrids = document.querySelectorAll('.collection .product-grid');

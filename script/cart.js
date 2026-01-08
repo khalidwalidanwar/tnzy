@@ -29,6 +29,12 @@ window.addEventListener("load",async()=>{
         const userRef = doc(db, "users", userId);
         const userSnap = await getDoc(userRef);
         const user = userSnap.data();
+        if(!user.addresses || Object.values(user.addresses).length === 0 || !user.firstName){
+            appendAlert("Please add an address to your profile before placing an order.","warning");
+            setTimeout(() => {
+                window.location.href = '../profile/';
+            }, 3000);
+        }
         const deliveryFeesRef = doc(db, "products", "customized-product");
         const deliveryFeesSnap = await getDoc(deliveryFeesRef);
         var deliveryFeesData = deliveryFeesSnap.data().deliveryFees;
@@ -42,16 +48,13 @@ window.addEventListener("load",async()=>{
             }
         });
         productsContainer.innerHTML ="";
-
+        
         {// get user info
             if(userId){
                 const userRef = doc(db, "users", userId);
                 const userSnap = await getDoc(userRef);
                 const user = userSnap.data();
-                if(!user.addresses || Object.values(user.addresses).length === 0){
-                    appendAlert("Please add an address to your profile before placing an order.","warning");
-                    window.location.href = '../profile/';
-                }
+                
                 document.querySelector(".userInfo .username").innerHTML = (user.firstName || "") + " " + (user.lastName || "");
                 document.querySelector(".userInfo .email").innerHTML = user.email;
                 document.querySelector(".userInfo .deliveryInfo .locationInfo .loc").innerHTML = `${(user.addresses)[0].address}, ${(user.addresses)[0].city}, ${(user.addresses)[0].country}` || "لم يتم تحديد عنوان بعد";
@@ -198,6 +201,16 @@ window.addEventListener("load",async()=>{
                     // decrease product quantities
                     Object.values(cart).forEach(async(product)=>{
                     if(product.productId == "custom-tshirt"){
+                        emailjs.send('service_82g1fut', 'template_zorvcag', adminParams);
+                        emailjs.send('service_82g1fut', 'template_zorvcag', templateParams)
+                            .then((response) => {
+                                appendAlert('Thanks for your order! A confirmation email has been sent to you.', 'success');
+                                window.localStorage.removeItem("cart");
+                                window.location.href = '../profile/';
+                            }, (error) => {
+                                appendAlert('Failed to add your order. Please try again later.', 'danger');
+                                console.log('FAILED...', error);
+                            });
                         return; // skip custom products
                     }
                     const productRef = doc(db, "products", product.productId);
@@ -220,7 +233,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -233,7 +246,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -246,7 +259,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -259,7 +272,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -272,7 +285,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -308,7 +321,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -321,7 +334,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -334,7 +347,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -347,7 +360,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -360,7 +373,7 @@ window.addEventListener("load",async()=>{
                                     window.localStorage.removeItem("cart");
                                     window.location.href = '../profile/';
                                 }, (error) => {
-                                    appendAlert('Failed to send Your email. Please try again later.', 'danger');
+                                    appendAlert('Failed to add your order. Please try again later.', 'danger');
                                     console.log('FAILED...', error);
                                 });
                         });
@@ -453,6 +466,7 @@ async function loadProductsTotal(product){
                     item.material == "High" ? price += highQualitFees : price += lowQualityFees;
                     item.printingBackImg && item.printingFrontImg ? price += parseInt(printingFees)*2 :
                     item.printingImg || item.printingBackImg || item.printingFrontImg ? price += printingFees : price+= parseInt(printingFees);
+                    item.sizeType=="oversize"?price+=50:"";
                     const productTotalPrice = price * item.quantity;
                     totalOfProducts += productTotalPrice;
 
@@ -543,7 +557,7 @@ async function loadProductsTotal(product){
                     </div>
                     <div class="product-details">
                     <p class="product-size">Size: ${product.size || "M"} ${' ('+capitalized+")"}</p>
-                    <p class="product-price" class="price">Price: <span>${item.newPrice}</span> EGP</p>
+                    <p class="product-price" class="price">Price: <span>${item.sizeType=="oversize"?parseInt(item.newPrice+50):item.newPrice}</span> EGP</p>
                     <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${product.quantity}" min="1"> </p>
                     </div>
                 </div>
