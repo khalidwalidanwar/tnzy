@@ -825,7 +825,7 @@ section.analyse .container .reviews button:hover {
 }
 .productPreview .previewCard .productPrice {
   font-size: 18px;
-  color: #000;
+  color: var(--maincolor);
   margin-top: 10px;
   text-align: left;
   position: relative;
