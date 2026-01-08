@@ -542,7 +542,7 @@ body {
 .container .ztshirtsummary .summaryDetails p {
   margin: 5px 0;
   font-size: 15px;
-  color: var(--mainFontcolor);
+  color: #000;
   text-align: left;
   padding-right: 10px;
   width: 50%;
