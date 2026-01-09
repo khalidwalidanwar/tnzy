@@ -545,11 +545,12 @@ async function loadProductsTotal(product){
                     return;
                 }
             }else{
-                const productTotalPrice = item.newPrice * product.quantity;
-                totalOfProducts += productTotalPrice;
                 const productElement = document.createElement("div");
                 productElement.classList.add("product");
                 const capitalized = product.sizeType.charAt(0).toUpperCase() + product.sizeType.slice(1);
+                const zPrice = product.sizeType=="oversize"?parseInt(item.newPrice+50):item.newPrice;
+                const productTotalPrice = zPrice * product.quantity;
+                totalOfProducts += productTotalPrice;
                 productElement.innerHTML=`
                 <div class="details">
                     <div class="product-title">
@@ -557,7 +558,7 @@ async function loadProductsTotal(product){
                     </div>
                     <div class="product-details">
                     <p class="product-size">Size: ${product.size || "M"} ${' ('+capitalized+")"}</p>
-                    <p class="product-price" class="price">Price: <span>${item.sizeType=="oversize"?parseInt(item.newPrice+50):item.newPrice}</span> EGP</p>
+                    <p class="product-price" class="price">Price: <span>${zPrice}</span> EGP</p>
                     <p class="product-quantity" dir="rtl">Quantity: <input type="number" class="form-control" value="${product.quantity}" min="1"> </p>
                     </div>
                 </div>
@@ -575,9 +576,9 @@ async function loadProductsTotal(product){
                     const newQuantity = parseInt(e.target.value);
                     if(item.avaliableSizes && newQuantity <= item.avaliableSizes[product.size]){
                         if(newQuantity >= 1){
-                            const newTotalPrice = item.newPrice * newQuantity;
+                            const newTotalPrice = zPrice * newQuantity;
                             productElement.querySelector(".totalProductPrice").innerHTML = `${newTotalPrice} EGP`;
-                            totalOfProducts = totalOfProducts - (item.newPrice * product.quantity) + newTotalPrice;
+                            totalOfProducts = totalOfProducts - (zPrice * product.quantity) + newTotalPrice;
                             document.querySelector(".totalOfProducts").innerHTML = `${totalOfProducts} <span>EGP</span>`;
                             document.querySelector(".subTotalPrice").innerHTML = `${totalOfProducts + deliveryFees} <span>EGP</span>`;
                             const totalPrice = totalOfProducts + deliveryFees - discount;
